@@ -75,8 +75,8 @@ Want to contribute to tloc? Awesome, we would love your input ♥\
 If you have a feature request, start a [discussion](https://github.com/navazjm/tloc/discussions),
 and we can work together to incorporate it into tloc!\
 \
-Encountered a defect? Please report it under [issues](https://github.com/navazjm/tloc/issues).\
-Be sure to include detailed information to help us address the issue effectively."
+Encountered a defect? Please report it under [issues](https://github.com/navazjm/tloc/issues).
+Be sure to include detailed information to help us address the issue effectively.\
 \
 Want to implement a feature request or fix a defect? Checkout our [contributing guide](./docs/contributing.md).
 
