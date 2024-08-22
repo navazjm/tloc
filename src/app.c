@@ -16,14 +16,16 @@ TLOC_App* tloc_app_init() {
     }
 
     app->version = "0.1.0";
+    app->file_summaries = NULL;
+    app->file_summaries_buffer_size = 32;
+    app->file_summaries_count = 0;
+
     app->path = getcwd(NULL, 0);
     app->is_path_dir = 1;
     app->show_full_path = 0;
     app->include_untracked = 0;
     app->group_by_language = 0;
-    app->file_summaries = NULL;
-    app->file_summaries_buffer_size = 32;
-    app->file_summaries_count = 0;
+    app->exclude_unsupported = 0;
 
     return app;
 }
@@ -79,6 +81,9 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
         }
         if (strcmp(options[0], "-fp") == 0 || strcmp(options[0], "--full-path") == 0) {
             app->show_full_path = 1;
+        }
+        if (strcmp(options[0], "-eu") == 0 || strcmp(options[0], "--exclude-unsupported") == 0) {
+            app->exclude_unsupported = 1;
         }
 
         free(options[0]);
@@ -160,6 +165,9 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
     char* dot = strrchr(file_path, '.');
     file_summary.ext = dot ? strdup(dot + 1) : NULL;
     const TLOC_Language* found_supported_language = tloc_language_get_by_extension(file_summary.ext);
+    if (found_supported_language == NULL && app->exclude_unsupported) {
+        return;
+    }
     uint8_t found_starting_multiline_comment = 0;
 
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -347,9 +355,8 @@ void tloc_app_display_results_by_language(TLOC_App* app) {
 
     for (int i = 0; i < app->file_summaries_count; i++) {
         TLOC_File_Summary file_summary = app->file_summaries[i];
-        printf("%s\n", file_summary.name);
         const TLOC_Language* supported_language = tloc_language_get_by_extension(file_summary.ext);
-        const char* language_name = supported_language ? supported_language->name : "Unknown";
+        const char* language_name = supported_language ? supported_language->name : "N/A";
         TLOC_Language_Summary* group = tloc_summary_find_or_create_language_summary(
             &language_summary_groups, &language_summary_groups_count, language_name);
 
@@ -428,7 +435,8 @@ void tloc_print_usage_help() {
            "\n"
            "DISPLAY OPTIONS:\n"
            "    -l, --language                  List data by programming languages, not by files.\n"
-           "    -fp, --full-path                Expand file name to show full path\n"
+           "    -fp, --full-path                Expand file name to show full path.\n"
+           "    -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.\n"
            "\n"
            "For more details, please visit: "
            "https://github.com/navazjm/tloc/blob/main/docs/options.md\n");

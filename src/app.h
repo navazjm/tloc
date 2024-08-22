@@ -7,14 +7,16 @@
 
 typedef struct {
     const char* version;
+    TLOC_File_Summary* file_summaries;
+    uint16_t file_summaries_buffer_size;
+    uint16_t file_summaries_count;
+
     char* path;
     uint8_t is_path_dir;
     uint8_t show_full_path;
     uint8_t include_untracked;
     uint8_t group_by_language;
-    TLOC_File_Summary* file_summaries;
-    uint16_t file_summaries_buffer_size;
-    uint16_t file_summaries_count;
+    uint8_t exclude_unsupported;
 } TLOC_App;
 
 TLOC_App* tloc_app_init();

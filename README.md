@@ -153,6 +153,8 @@ FILTERING AND SORTING OPTIONS:
 DISPLAY OPTIONS:
     -l, --language                  List data by programming languages, not by files.
     -fp, --full-path                Expand file name to show full path
+    -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.
+
 ```
 
 For detailed options' documentation, checkout [options.md](./docs/options.md)
