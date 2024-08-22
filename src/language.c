@@ -3,6 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * Adding a new language? Remember to update the Supported Language section in the
+ * README. PRs will not be accepted until this requirement is fulfilled.
+ */
+
+// global list of supported langhuages
 const TLOC_Language tloc_supported_languages[] = {
     {"C", "c", "//", "/*", "*/"},           {"C/C++ Header", "h, hpp", "//", "/*", "*/"},
     {"C++", "cpp", "//", "/*", "*/"},       {"Markdown", "md", NULL, "<!---", "-->"},

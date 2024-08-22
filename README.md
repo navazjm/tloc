@@ -1,23 +1,113 @@
 # TLOC - Total Lines of Code
 
+## Overview
+
+Developed in C with no dependencies beyond the standard library, `tloc` offers a 
+straightforward approach to counting lines of code. As of August 22, 2024, `tloc` 
+parses each file line by line, performing the following checks:
+
+1. **Blank Lines**: If a line is empty or contains only newline characters, it 
+is counted as a blank line.
+1. **Multiline Comment Start**: If a line begins with characters indicating the 
+start of a multiline comment block, tloc recognizes it as the beginning of a comment.
+1. **Within Multiline Comment**: Lines within a multiline comment block are counted 
+as comments until the end of the block is detected.
+1. **Single Line Comment**: If a line begins with characters that denote a single-line 
+comment, it is counted as a comment.
+1. **Source Code**: Any line that does not meet the above conditions is counted 
+as source code.
+
+For more detailed examples and explanations, refer to [calculations.md](./docs/calculations.md)
+
 ## Table of Contents
-- [Quick Start](#quick-start)
-- [Overview](#overview)
-- [License](#license)
 - [Install](#install)
+    - [Install From Source](#install-from-source)
 - [Usage](#usage)
     - [Usage Caveats](#usage-caveats)
     - [Options](#options)
 - [Supported Languages](#supported-languages)
 - [Contributing](#contributing)
-
-## Quick Start
-
-## Overview
-
-## License
+- [License](#license)
 
 ## Install
+
+### Install From Source
+
+1. Clone the repo
+
+```sh 
+git clone https://github.com/navazjm/tloc.git
+```
+
+2. cd into tloc
+
+```sh 
+cd tloc
+```
+
+#### MacOS & Linux
+
+3. Either run the install script or manually build with CMake
+
+##### Script
+
+1. Run the install script 
+
+```sh 
+./scripts/install.sh
+```
+
+The install script runs the commands found below, however, we make the decision
+to place the tloc executable in `/usr/local/bin` for you.
+
+##### CMake  
+
+1. Create `build` dir and cd into it
+
+```sh 
+mkdir build && cd build
+```
+
+2. Run cmake
+
+```sh 
+cmake ..
+```
+
+3. Run make
+
+```sh 
+make tloc
+```
+
+On your machine, the executable is now located in `path/to/tloc/build/tloc`. 
+To make tloc accessible from any directory, you can either:
+
+1. Add the tloc executable, `path/to/tloc/build/tloc`, to your $PATH. For example, 
+using bash or zsh, you can modify your ~/.profile or ~/.zprofile like so:
+
+```sh 
+export PATH=$PATH:/path/to/tloc/build/tloc
+```
+
+2. Create a symlink. However, if you were to delete `path/to/tloc/build/tloc`, 
+the symlink will no longer work. 
+
+```
+sudo ln -s /path/to/tloc/build/tloc /usr/local/bin/tloc
+```
+
+3. Copy the tloc executable from `path/to/tloc/build/tloc` to `/usr/local/bin`
+
+```sh 
+sudo cp path/to/tloc/build/tloc /usr/local/bin
+```
+
+#### Windows
+
+##### Install Script
+
+##### CMake
 
 ## Usage
 
@@ -189,3 +279,6 @@ Be sure to include detailed information to help us address the issue effectively
 \
 Want to implement a feature request or fix a defect? Checkout our [contributing guide](./docs/contributing.md).
 
+## License
+
+TLOC is licensed under [GPL-3.0](./COPYING)

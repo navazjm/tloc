@@ -22,6 +22,7 @@ FILTERING AND SORTING OPTIONS:
 
 DISPLAY OPTIONS:
     -l, --language                  List data by programming languages, not by files.
+    -fp, --full-path                Expand file name to show full path.
 
 -------------------------------------------------------------------------------
 
