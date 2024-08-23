@@ -427,7 +427,7 @@ void tloc_print_usage_help() {
            "\n"
            "META OPTIONS:\n"
            "    -h, --help                      Display list of command-line options.\n"
-           "    -v, --version                   Display version of tloc.\n"
+           "    -v, --version                   Display installed version of tloc.\n"
            "    -sl, --supported-languages      Display a list of supported programming languages.\n"
            "\n"
            "FILTERING AND SORTING OPTIONS:\n"
@@ -435,8 +435,8 @@ void tloc_print_usage_help() {
            "\n"
            "DISPLAY OPTIONS:\n"
            "    -l, --language                  List data by programming languages, not by files.\n"
-           "    -fp, --full-path                Expand file name to show full path.\n"
            "    -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.\n"
+           "    -fp, --full-path                Expand file name to show full path.\n"
            "\n"
            "For more details, please visit: "
            "https://github.com/navazjm/tloc/blob/main/docs/options.md\n");

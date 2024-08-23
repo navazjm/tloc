@@ -215,7 +215,7 @@ OPTIONAL FILE PATH:
 
 META OPTIONS:
     -h, --help                      Display list of command-line options.
-    -v, --version                   Display version of tloc.
+    -v, --version                   Display installed version of tloc.
     -sl, --supported-languages      Display a list of supported programming languages.
 
 FILTERING AND SORTING OPTIONS:
@@ -223,8 +223,8 @@ FILTERING AND SORTING OPTIONS:
 
 DISPLAY OPTIONS:
     -l, --language                  List data by programming languages, not by files.
-    -fp, --full-path                Expand file name to show full path
     -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.
+    -fp, --full-path                Expand file name to show full path
 
 ```
 
