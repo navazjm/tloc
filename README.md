@@ -47,7 +47,7 @@ cd tloc
 
 #### MacOS & Linux
 
-3. Either run the install script or manually build with CMake
+Either run the install script or manually build with CMake
 
 ##### Script
 
