@@ -10,14 +10,26 @@ suit your preferences.
 
 ### META OPTIONS:
 
-- `-h`, `--help` -> Display list of command-line options.
+#### Help Option
 
-- `-v`, `--version` -> Display installed version of tloc.
+- Shorthand:   `-h`
+- Longhange:   `--help`
+- Description: Display list of command-line options.
 
-- `-sl`, `--supported-languages` -> Display a list of supported programming languages.
+#### Version Option
+
+- Shorthand:   `-v`
+- Longhange:   `--version`
+- Description: Display installed version of tloc. 
+
+#### Version Option
+
+- Shorthand:   `-sl`
+- Longhange:   `--supported-languages`
+- Description: Display a list of supported programming languages. 
 
 <details>
-<summary>More info.</summary>
+<summary>View Usage</summary>
 <pre>
 $ tloc -sl
 ----------------------------------
@@ -30,23 +42,210 @@ Markdown             md
 JavaScript           js
 TypeScript           ts
 </pre>
-<br>
 Files with an unsupported language will be tracked as `N/A` where only total lines
 is counted.
-<br>
 </details>
 
 ### FILTERING AND SORTING OPTIONS:
 
-- `-iu`, `--include-untracked` -> Include files not being tracked by Git.
+#### Include Untracked Option
+
+- Shorthand:   `-iu`
+- Longhange:   `--include-untracked`
+- Description: Include files not being tracked by Git. 
+
+<details>
+<summary>View Usage</summary>
+<pre>
+$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        src/file_not_tracked.c
+
+no changes added to commit (use "git add" and/or "git commit -a")
+</pre>
+
+Using git status, you can see `src/file_not_tracked.c` is an untracked file. Therefore,
+running `tloc` without `-iu` flag, will ignore the untracked file. 
+
+<pre> 
+$ tloc src
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./app.c                                         55             21            367            443
+./app.h                                          6              0             30             36
+./language.c                                    10             18             50             78
+./language.h                                     4              0             13             17
+./summary.c                                      2              3             19             24
+./summary.h                                      4              0             21             25
+./tloc.c                                         3              0             15             18
+./utils.c                                       16             40             49            105
+./utils.h                                        2              0              7              9
+------------------------------------------------------------------------------------------------
+TOTAL:                                         102             82            571            755
+------------------------------------------------------------------------------------------------
+
+$ tloc src -iu
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./utils.h                                        2              0              7              9
+./language.h                                     4              0             13             17
+./app.h                                          6              0             30             36
+./summary.c                                      2              3             19             24
+./utils.c                                       16             40             49            105
+./file_not_tracked.c                             0              0              0              0
+./language.c                                    10             18             50             78
+./summary.h                                      4              0             21             25
+./tloc.c                                         3              0             15             18
+./app.c                                         55             21            367            443
+------------------------------------------------------------------------------------------------
+TOTAL:                                         102             82            571            755
+------------------------------------------------------------------------------------------------
+</pre>
+</details>
 
 ### DISPLAY OPTIONS:
 
-- `-l`, `--language` -> List data by programming languages, not by files.
+#### Include Untracked Option
 
-- `-eu`, `--exclude-unsupported` -> Exclude unsupported file types/langauges from being displayed.
+- Shorthand:   `-l`
+- Longhange:   `--language`
+- Description: List data by programming languages, not by files. 
 
-- `-fp`, `--full-path` -> Expand file name to show full path.
+<details>
+<summary>View Usage</summary>
+<pre>
+$ tloc -l
+-------------------------------------------------------------------------------------------
+Language                 files          blank        comment           code          total
+-------------------------------------------------------------------------------------------
+N/A                          8              0              0              0            749
+Markdown                     5            104              0            310            414
+C                            5             86             82            500            668
+C/C++ Header                 4             16              0             71             87
+-------------------------------------------------------------------------------------------
+TOTAL:                      22            206             82            881           1918
+-------------------------------------------------------------------------------------------
+</pre>
+</details>
+
+#### Exclude Unsupported Option
+
+- Shorthand:   `-eu`
+- Longhange:   `--exclude-unsupported`
+- Description: Exclude unsupported file types/langauges from being displayed. 
+
+<details>
+<summary>View Usage</summary>
+<pre>
+$ tloc -l -eu
+-------------------------------------------------------------------------------------------
+Language                 files          blank        comment           code          total
+-------------------------------------------------------------------------------------------
+Markdown                     5            111              0            324            435
+C                            5             86             82            500            668
+C/C++ Header                 4             16              0             71             87
+-------------------------------------------------------------------------------------------
+TOTAL:                      14            213             82            895           1190
+-------------------------------------------------------------------------------------------
+
+$ tloc -l
+-------------------------------------------------------------------------------------------
+Language                 files          blank        comment           code          total
+-------------------------------------------------------------------------------------------
+N/A                          8              0              0              0            749
+Markdown                     5            104              0            310            414
+C                            5             86             82            500            668
+C/C++ Header                 4             16              0             71             87
+-------------------------------------------------------------------------------------------
+TOTAL:                      22            206             82            881           1918
+-------------------------------------------------------------------------------------------
+</pre>
+
+Comparing `tloc -l -eu` and `tloc -l`, you can see that the `N/A` grouping is no 
+longer being rendered. If you omit `-l` option, files whose supported language 
+is not known, will also not be displayed.
+
+</details>
+
+#### Full Path Option
+
+- Shorthand:   `-fp`
+- Longhange:   `--full-path`
+- Description: Expand file name to show full path. 
+
+<details>
+<summary>View Usage</summary>
+<pre>
+$ tloc ../aoc/2023/src -iu -fp
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+../aoc/2023/src/day_05/day_05.cpp               10              4             55             69
+../aoc/2023/src/day_05/day_05.h                  3              0              8             11
+../aoc/2023/src/day_02/day_02.cpp                3              0             87             90
+../aoc/2023/src/day_02/day_02.h                  3              0              8             11
+../aoc/2023/src/day_03/day_03.h                  3              0              8             11
+../aoc/2023/src/day_03/day_03.cpp                5              0            110            115
+../aoc/2023/src/day_04/day_04.cpp                3              0             70             73
+../aoc/2023/src/day_04/day_04.h                  3              0              8             11
+../aoc/2023/src/template/day_x.h                 3              0              8             11
+../aoc/2023/src/template/day_x.cpp               2              0              8             10
+../aoc/2023/src/day_01/day_01.cpp                5              0             68             73
+../aoc/2023/src/day_01/day_01.h                  3              0              8             11
+../aoc/2023/src/day_06/day_06.cpp                7              0             67             74
+../aoc/2023/src/day_06/day_06.h                  3              0              8             11
+../aoc/2023/src/day_08/day_08.h                  3              0              8             11
+../aoc/2023/src/day_08/day_08.cpp               15              0             98            113
+../aoc/2023/src/day_09/day_09.h                  3              0              8             11
+../aoc/2023/src/day_09/day_09.cpp                8              0             79             87
+../aoc/2023/src/day_07/day_07.h                  3              0              8             11
+../aoc/2023/src/day_07/day_07.cpp               19              3            133            155
+../aoc/2023/src/main.cpp                         6              0            104            110
+------------------------------------------------------------------------------------------------
+TOTAL:                                         113              7            959           1079
+------------------------------------------------------------------------------------------------
+
+$ tloc ../aoc/2023/src -iu
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./day_05/day_05.cpp                             10              4             55             69
+./day_05/day_05.h                                3              0              8             11
+./day_02/day_02.cpp                              3              0             87             90
+./day_02/day_02.h                                3              0              8             11
+./day_03/day_03.h                                3              0              8             11
+./day_03/day_03.cpp                              5              0            110            115
+./day_04/day_04.cpp                              3              0             70             73
+./day_04/day_04.h                                3              0              8             11
+./template/day_x.h                               3              0              8             11
+./template/day_x.cpp                             2              0              8             10
+./day_01/day_01.cpp                              5              0             68             73
+./day_01/day_01.h                                3              0              8             11
+./day_06/day_06.cpp                              7              0             67             74
+./day_06/day_06.h                                3              0              8             11
+./day_08/day_08.h                                3              0              8             11
+./day_08/day_08.cpp                             15              0             98            113
+./day_09/day_09.h                                3              0              8             11
+./day_09/day_09.cpp                              8              0             79             87
+./day_07/day_07.h                                3              0              8             11
+./day_07/day_07.cpp                             19              3            133            155
+./main.cpp                                       6              0            104            110
+------------------------------------------------------------------------------------------------
+TOTAL:                                         113              7            959           1079
+------------------------------------------------------------------------------------------------
+</pre>
+
+By default, if `-fp` is not passed in and the provided path is a directory of files,
+`tloc` will trim the provided path from each individual file name to save on space
+when displaying.
+
+</details>
 
 ## Adding a new option
 
