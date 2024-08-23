@@ -12,21 +12,21 @@ suit your preferences.
 
 #### Help Option
 
-- Shorthand:   `-h`
-- Longhange:   `--help`
-- Description: Display list of command-line options.
+**Shorthand**:   `-h`\
+**Longhand**:    `--help`\
+**Description**: Display list of command-line options.\
 
 #### Version Option
 
-- Shorthand:   `-v`
-- Longhange:   `--version`
-- Description: Display installed version of tloc. 
+**Shorthand**:   `-v`\
+**Longhand**:    `--version`\
+**Description**: Display installed version of tloc.\ 
 
 #### Version Option
 
-- Shorthand:   `-sl`
-- Longhange:   `--supported-languages`
-- Description: Display a list of supported programming languages. 
+**Shorthand**:   `-sl`\
+**Longhand**:    `--supported-languages`\
+**Description**: Display a list of supported programming languages. \ 
 
 <details>
 <summary>View Usage</summary>
@@ -50,9 +50,9 @@ is counted.
 
 #### Include Untracked Option
 
-- Shorthand:   `-iu`
-- Longhange:   `--include-untracked`
-- Description: Include files not being tracked by Git. 
+**Shorthand**:   `-iu`\
+**Longhand**:    `--include-untracked`\
+**Description**: Include files not being tracked by Git.\ 
 
 <details>
 <summary>View Usage</summary>
@@ -88,7 +88,8 @@ File name                                    blank        comment           code
 ------------------------------------------------------------------------------------------------
 TOTAL:                                         102             82            571            755
 ------------------------------------------------------------------------------------------------
-
+</pre>
+<pre>
 $ tloc src -iu
 ------------------------------------------------------------------------------------------------
 File name                                    blank        comment           code          total
@@ -111,11 +112,11 @@ TOTAL:                                         102             82            571
 
 ### DISPLAY OPTIONS:
 
-#### Include Untracked Option
+#### Language Option
 
-- Shorthand:   `-l`
-- Longhange:   `--language`
-- Description: List data by programming languages, not by files. 
+**Shorthand**:   `-l`\
+**Longhand**:    `--language`\
+**Description**: List data by programming languages, not by files.\ 
 
 <details>
 <summary>View Usage</summary>
@@ -136,9 +137,9 @@ TOTAL:                      22            206             82            881     
 
 #### Exclude Unsupported Option
 
-- Shorthand:   `-eu`
-- Longhange:   `--exclude-unsupported`
-- Description: Exclude unsupported file types/langauges from being displayed. 
+**Shorthand**:   `-eu`\
+**Longhand**:    `--exclude-unsupported`\
+**Description**: Exclude unsupported file types/langauges from being displayed.\ 
 
 <details>
 <summary>View Usage</summary>
@@ -153,7 +154,8 @@ C/C++ Header                 4             16              0             71     
 -------------------------------------------------------------------------------------------
 TOTAL:                      14            213             82            895           1190
 -------------------------------------------------------------------------------------------
-
+</pre>
+<pre>
 $ tloc -l
 -------------------------------------------------------------------------------------------
 Language                 files          blank        comment           code          total
@@ -175,9 +177,9 @@ is not known, will also not be displayed.
 
 #### Full Path Option
 
-- Shorthand:   `-fp`
-- Longhange:   `--full-path`
-- Description: Expand file name to show full path. 
+**Shorthand**:   `-fp`\
+**Longhand**:    `--full-path`\
+**Description**: Expand file name to show full path.\ 
 
 <details>
 <summary>View Usage</summary>
@@ -210,7 +212,8 @@ File name                                    blank        comment           code
 ------------------------------------------------------------------------------------------------
 TOTAL:                                         113              7            959           1079
 ------------------------------------------------------------------------------------------------
-
+</pre>
+<pre>
 $ tloc ../aoc/2023/src -iu
 ------------------------------------------------------------------------------------------------
 File name                                    blank        comment           code          total
