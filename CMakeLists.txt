@@ -22,3 +22,6 @@ set_target_properties(tloc_debug PROPERTIES
     COMPILE_FLAGS "-fsanitize=address -fno-omit-frame-pointer"
     LINK_FLAGS "-fsanitize=address"
 )
+
+# allows user to run `sudo make tloc install` to create tloc executable and pace it in /usr/local/bin/ 
+install(TARGETS tloc DESTINATION /usr/local/bin)

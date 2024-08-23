@@ -54,11 +54,12 @@ cd tloc
 1. Run the install script 
 
 ```sh 
-./scripts/install.sh
+sudo ./scripts/install.sh
 ```
 
-The install script runs the commands found below, however, we make the decision
-to place the tloc executable in `/usr/local/bin` for you.
+*Note: The install script runs the commands found in the following CMake section.
+Use `sudo` to move `tloc` executable into `/usr/local/bin/`. This requires
+elevated privilages and allows you to use `tloc` from any directory*
 
 ##### CMake  
 
@@ -77,31 +78,11 @@ cmake ..
 3. Run make
 
 ```sh 
-make tloc
+sudo make install
 ```
 
-On your machine, the executable is now located in `path/to/tloc/build/tloc`. 
-To make tloc accessible from any directory, you can either:
-
-1. Add the tloc executable, `path/to/tloc/build/tloc`, to your $PATH. For example, 
-using bash or zsh, you can modify your ~/.profile or ~/.zprofile like so:
-
-```sh 
-export PATH=$PATH:/path/to/tloc/build/
-```
-
-2. Create a symlink. However, if you were to delete `path/to/tloc/build/tloc`, 
-the symlink will no longer work. 
-
-```
-sudo ln -s /absolute/path/to/tloc/build/tloc /usr/local/bin/tloc
-```
-
-3. Copy the tloc executable from `path/to/tloc/build/tloc` to `/usr/local/bin`
-
-```sh 
-sudo cp path/to/tloc/build/tloc /usr/local/bin
-```
+*Note: Use `sudo` to move `tloc` executable into `/usr/local/bin/`. This requires
+elevated privilages and allows you to use `tloc` from any directory*
 
 #### Windows
 
@@ -176,7 +157,7 @@ file name                                    blank        comment           code
 
 There are two small caveats when passing in a file or directory.
 
-1. The path must be the second command-line argument, i.e, directoy follow the tloc 
+1. The path must be the second command-line argument, i.e, directory follow the tloc 
 executable. Otherwise, tloc will fallback to CWD.
 
 Incorrect:
