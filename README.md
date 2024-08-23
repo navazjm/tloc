@@ -87,14 +87,14 @@ To make tloc accessible from any directory, you can either:
 using bash or zsh, you can modify your ~/.profile or ~/.zprofile like so:
 
 ```sh 
-export PATH=$PATH:/path/to/tloc/build/tloc
+export PATH=$PATH:/path/to/tloc/build/
 ```
 
 2. Create a symlink. However, if you were to delete `path/to/tloc/build/tloc`, 
 the symlink will no longer work. 
 
 ```
-sudo ln -s /path/to/tloc/build/tloc /usr/local/bin/tloc
+sudo ln -s /absolute/path/to/tloc/build/tloc /usr/local/bin/tloc
 ```
 
 3. Copy the tloc executable from `path/to/tloc/build/tloc` to `/usr/local/bin`
