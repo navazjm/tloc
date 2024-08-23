@@ -1,32 +1,56 @@
-USAGE:
-  tloc optional/path [options]
+# Options (Command Line Argumnets)
 
-OPTIONAL PATH:
+## Overview
 
-* Can be a path to a directory or a specific file
-* Will default to CWD, if one of the following conditions are met:
-    1. Omitted
-    2. Path does not exist
-    3. Do not have read access permisions
-    4. Not provided as the second command-line arg.
-        Ex: "$ tloc /path/to/files"    -> will set path to /path/to/files
-        Ex: "$ tloc -l /path/to/files" -> will ignore /path/to/files
+By default, when `tloc` is ran without any command-line arguments, it uses the 
+current working directory (`cwd`) as the file path to parse. It will only parse 
+files returned by `git ls-files <path>`, and it renders data for each file individually. 
+Using the options listed below, you can customize how `tloc` renders the data to 
+suit your preferences.
 
-META OPTIONS:
-    -h, --help                      Display list of command-line options.
-    -v, --version                   Display version of tloc.
-    -sl, --supported-languages      Display a list of supported programming languages.
+### META OPTIONS:
 
-FILTERING AND SORTING OPTIONS:
-    -iu, --include-untracked        Include files not being tracked by Git.
+- `-h`, `--help` -> Display list of command-line options.
 
-DISPLAY OPTIONS:
-    -l, --language                  List data by programming languages, not by files.
-    -fp, --full-path                Expand file name to show full path.
+- `-v`, `--version` -> Display installed version of tloc.
 
--------------------------------------------------------------------------------
+- `-sl`, `--supported-languages` -> Display a list of supported programming languages.
 
-To add a new option:
+<details>
+<summary>More info.</summary>
+<pre>
+$ tloc -sl
+----------------------------------
+Language             Extensions
+----------------------------------
+C                    c
+C/C++ Header         h, hpp
+C++                  cpp
+Markdown             md
+JavaScript           js
+TypeScript           ts
+</pre>
+<br>
+Files with an unsupported language will be tracked as `N/A` where only total lines
+is counted.
+<br>
+</details>
+
+### FILTERING AND SORTING OPTIONS:
+
+- `-iu`, `--include-untracked` -> Include files not being tracked by Git.
+
+### DISPLAY OPTIONS:
+
+- `-l`, `--language` -> List data by programming languages, not by files.
+
+- `-eu`, `--exclude-unsupported` -> Exclude unsupported file types/langauges from being displayed.
+
+- `-fp`, `--full-path` -> Expand file name to show full path.
+
+## Adding a new option
+
 1. Update this file with the new shorthand, longhand, and description of the option
-2. In src/app.c, modify loc_app_parse_cmd_args to include the new option
-3. Also, in src/app.c, modify tloc_print_usage_help to include the new option
+2. In src/app.c, modify `loc_app_parse_cmd_args` to include the new option
+3. Also, in src/app.c, modify `tloc_print_usage_help` to include the new option
+4. Finally, implement the logic to parse/render data based on the new option.
