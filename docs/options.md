@@ -16,13 +16,17 @@ suit your preferences.
 **Longhand**:    `--help`\
 **Description**: Display list of command-line options.\
 
+---
+
 #### Version Option
 
 **Shorthand**:   `-v`\
 **Longhand**:    `--version`\
 **Description**: Display installed version of tloc.\ 
 
-#### Version Option
+---
+
+#### Language Option
 
 **Shorthand**:   `-sl`\
 **Longhand**:    `--supported-languages`\
@@ -45,6 +49,8 @@ TypeScript           ts
 Files with an unsupported language will be tracked as `N/A` where only total lines
 is counted.
 </details>
+
+---
 
 ### FILTERING AND SORTING OPTIONS:
 
@@ -110,6 +116,8 @@ TOTAL:                                         102             82            571
 </pre>
 </details>
 
+---
+
 ### DISPLAY OPTIONS:
 
 #### Language Option
@@ -134,6 +142,8 @@ TOTAL:                      22            206             82            881     
 -------------------------------------------------------------------------------------------
 </pre>
 </details>
+
+---
 
 #### Exclude Unsupported Option
 
@@ -174,6 +184,8 @@ longer being rendered. If you omit `-l` option, files whose supported language
 is not known, will also not be displayed.
 
 </details>
+
+---
 
 #### Full Path Option
 
@@ -249,6 +261,8 @@ By default, if `-fp` is not passed in and the provided path is a directory of fi
 when displaying.
 
 </details>
+
+---
 
 ## Adding a new option
 
