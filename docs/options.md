@@ -14,7 +14,7 @@ suit your preferences.
 
 **Shorthand**:   `-h`\
 **Longhand**:    `--help`\
-**Description**: Display list of command-line options.\
+**Description**: Display list of command-line options.
 
 ---
 
@@ -22,7 +22,7 @@ suit your preferences.
 
 **Shorthand**:   `-v`\
 **Longhand**:    `--version`\
-**Description**: Display installed version of tloc.\ 
+**Description**: Display installed version of tloc. 
 
 ---
 
@@ -30,7 +30,7 @@ suit your preferences.
 
 **Shorthand**:   `-sl`\
 **Longhand**:    `--supported-languages`\
-**Description**: Display a list of supported programming languages. \ 
+**Description**: Display a list of supported programming languages.
 
 <details>
 <summary>View Usage</summary>
@@ -58,7 +58,7 @@ is counted.
 
 **Shorthand**:   `-iu`\
 **Longhand**:    `--include-untracked`\
-**Description**: Include files not being tracked by Git.\ 
+**Description**: Include files not being tracked by Git. 
 
 <details>
 <summary>View Usage</summary>
@@ -124,7 +124,7 @@ TOTAL:                                         102             82            571
 
 **Shorthand**:   `-l`\
 **Longhand**:    `--language`\
-**Description**: List data by programming languages, not by files.\ 
+**Description**: List data by programming languages, not by files. 
 
 <details>
 <summary>View Usage</summary>
@@ -149,7 +149,7 @@ TOTAL:                      22            206             82            881     
 
 **Shorthand**:   `-eu`\
 **Longhand**:    `--exclude-unsupported`\
-**Description**: Exclude unsupported file types/langauges from being displayed.\ 
+**Description**: Exclude unsupported file types/langauges from being displayed. 
 
 <details>
 <summary>View Usage</summary>
@@ -191,7 +191,7 @@ is not known, will also not be displayed.
 
 **Shorthand**:   `-fp`\
 **Longhand**:    `--full-path`\
-**Description**: Expand file name to show full path.\ 
+**Description**: Expand file name to show full path. 
 
 <details>
 <summary>View Usage</summary>
