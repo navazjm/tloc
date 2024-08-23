@@ -175,11 +175,11 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
         if (found_supported_language == NULL) {
             continue;
         }
-        if (*line == '\n') {
+        char* line_trimmed = tloc_utils_string_trim_whitespace(line);
+        if (strlen(line_trimmed) == 0 || *line_trimmed == '\n' || strcmp(line_trimmed, "\r\n") == 0) {
             file_summary.blank_lines++;
             continue;
         }
-        char* line_trimmed = tloc_utils_string_trim_whitespace(line);
         if (strncmp(found_supported_language->multiline_comment_start, line_trimmed,
                     strlen(found_supported_language->multiline_comment_start)) == 0) {
             file_summary.comment_lines++;
