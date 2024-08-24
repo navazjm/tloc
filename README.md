@@ -82,15 +82,15 @@ Developed in C with no dependencies beyond the standard library, `tloc` offers a
 straightforward approach to counting lines of code. As of August 22, 2024, `tloc` 
 parses each file line by line, performing the following checks:
 
-1. **Blank Lines**: If a line is empty or contains only newline characters, it 
-is counted as a blank line.
-1. **Multiline Comment Start**: If a line begins with characters indicating the 
+1. **Blank Lines**: If a line is empty or an espace sequence representing whitespace,
+it is counted as a blank line.
+1. **Multiline Comment Start**: If a line *begins* with characters indicating the
 start of a multiline comment block, tloc recognizes it as the beginning of a comment.
-1. **Within Multiline Comment**: Lines within a multiline comment block are counted 
+1. **Within Multiline Comment**: Lines within a multiline comment block are counted
 as comments until the end of the block is detected.
-1. **Single Line Comment**: If a line begins with characters that denote a single-line 
+1. **Single Line Comment**: If a line *begins* with characters that denote a single-line
 comment, it is counted as a comment.
-1. **Source Code**: Any line that does not meet the above conditions is counted 
+1. **Source Code**: Any line that does not meet the above conditions is counted
 as source code.
 
 For more detailed examples and explanations, refer to [calculations.md](./docs/calculations.md)
