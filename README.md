@@ -1,5 +1,81 @@
 # TLOC - Total Lines of Code
 
+*Note: This is a work in progress and has only been tested on ARM based MacOS.*
+
+## Table of Contents
+- [Quick Start](#quick-start)
+- [Overview](#overview)
+- [Install](#install)
+    - [Install From Source](#install-from-source)
+- [Usage](#usage)
+    - [Usage Caveats](#usage-caveats)
+    - [Options](#options)
+- [Supported Languages](#supported-languages)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Quick Start
+
+Step 1: Download tloc. Checkout how to [install](#install) tloc below.
+
+Step 2: Open a terminal.
+
+Step 3: Invoke tloc, passing in a file or directory, to count blank lines, comment 
+lines, and source code lines, displaying results per file.
+
+<details>
+<summary>CWD</summary>
+<pre>
+$ tloc
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./utils.h                                        2              0              7              9
+./language.h                                     4              0             13             17
+./app.h                                          5              0             29             34
+./utils.c                                       16             40             49            105
+./language.c                                     9             15             50             74
+./summary.h                                      2              0             11             13
+./tloc.c                                         3              0             15             18
+./app.c                                         45             20            309            374
+------------------------------------------------------------------------------------------------
+TOTAL:                                          86             75            483            644
+------------------------------------------------------------------------------------------------
+</pre>
+</details>
+
+<details>
+<summary>File</summary>
+<pre>
+$ tloc src/tloc.c
+------------------------------------------------------------------------------------------------
+file name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./tloc.c                                         3              0             15             18
+</pre>
+</details>
+
+<details>
+<summary>Directory</summary>
+<pre>
+$ tloc ./src
+------------------------------------------------------------------------------------------------
+file name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+./utils.h                                        2              0              7              9
+./language.h                                     4              0             13             17
+./app.h                                          5              0             29             34
+./utils.c                                       16             40             49            105
+./language.c                                     9             15             50             74
+./summary.h                                      2              0             11             13
+./tloc.c                                         3              0             15             18
+./app.c                                         45             20            309            374
+------------------------------------------------------------------------------------------------
+total:                                          86             75            483            644
+------------------------------------------------------------------------------------------------
+</pre>
+</details>
+
 ## Overview
 
 Developed in C with no dependencies beyond the standard library, `tloc` offers a 
@@ -18,16 +94,6 @@ comment, it is counted as a comment.
 as source code.
 
 For more detailed examples and explanations, refer to [calculations.md](./docs/calculations.md)
-
-## Table of Contents
-- [Install](#install)
-    - [Install From Source](#install-from-source)
-- [Usage](#usage)
-    - [Usage Caveats](#usage-caveats)
-    - [Options](#options)
-- [Supported Languages](#supported-languages)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Install
 
@@ -84,12 +150,6 @@ sudo make install
 *Note: Use `sudo` to move `tloc` executable into `/usr/local/bin/`. This requires
 elevated privilages and allows you to use `tloc` from any directory*
 
-#### Windows
-
-##### Install Script
-
-##### CMake
-
 ## Usage
 
 ```sh
@@ -98,60 +158,7 @@ $ tloc optional/file/path [options]
 
 By default, tloc will use your cwd as your file path. Also, tloc will only parse files 
 returned from running `git ls-files <path>`, i.e., files tracked by Git. Lastly, by 
-default, tloc will display lines of code per file and not by language. So if you 
-are in the src folder of tloc, you will get a result similar to:
-
-```sh 
-$ tloc
-------------------------------------------------------------------------------------------------
-File name                                    blank        comment           code          total
-------------------------------------------------------------------------------------------------
-./utils.h                                        2              0              7              9
-./language.h                                     4              0             13             17
-./app.h                                          5              0             29             34
-./utils.c                                       16             40             49            105
-./language.c                                     9             15             50             74
-./summary.h                                      2              0             11             13
-./tloc.c                                         3              0             15             18
-./app.c                                         45             20            309            374
-------------------------------------------------------------------------------------------------
-TOTAL:                                          86             75            483            644
-------------------------------------------------------------------------------------------------
-```
-
-You may provide a path to a directory of files you want tloc to parse. If you are 
-in the root of the tloc project, but only want to parse the `src` directory, you can 
-run the following command:
-
-```sh 
-$ tloc src
-------------------------------------------------------------------------------------------------
-file name                                    blank        comment           code          total
-------------------------------------------------------------------------------------------------
-./utils.h                                        2              0              7              9
-./language.h                                     4              0             13             17
-./app.h                                          5              0             29             34
-./utils.c                                       16             40             49            105
-./language.c                                     9             15             50             74
-./summary.h                                      2              0             11             13
-./tloc.c                                         3              0             15             18
-./app.c                                         45             20            309            374
-------------------------------------------------------------------------------------------------
-total:                                          86             75            483            644
-------------------------------------------------------------------------------------------------
-```
-
-You may also provide a path to a single file you want tloc to parse. If you are 
-in the root of the tloc project, but only want to parse `./src/tloc.c`, you can 
-run the following command:
-
-```sh 
-$ tloc src/tloc.c
-------------------------------------------------------------------------------------------------
-file name                                    blank        comment           code          total
-------------------------------------------------------------------------------------------------
-./tloc.c                                         3              0             15             18
-```
+default, tloc will display lines of code per file and not by language.
 
 ### Usage Caveats
 
