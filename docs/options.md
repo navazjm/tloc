@@ -26,7 +26,7 @@ suit your preferences.
 
 ---
 
-#### Language Option
+#### Supported Language Option
 
 **Shorthand**:   `-sl`\
 **Longhand**:    `--supported-languages`\
