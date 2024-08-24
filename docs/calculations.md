@@ -65,12 +65,12 @@ Breakdown:
 
 Line 01: `#include <stdio.h>\n` -> source code \
 Line 02: `\n` -> blank line \
-Line 03: `/*\n` -> comment \
-Line 04: `Returns the sum of two integers\n` -> comment \
+Line 03: `/*\n` -> comment, flags start of multline comment block\
+Line 04: `Returns the sum of two integers\n` -> comment, within multline comment block \
 Line 05: `\n` -> blank line, even though it is wihin a multline comment block \
-Line 06: `@param a -> int\n` -> comment \
-Line 07: `@param b -> int\n` -> comment \
-Line 08: `*/\n` -> comment \
+Line 06: `@param a -> int\n` -> comment, within multline comment block \
+Line 07: `@param b -> int\n` -> comment, within multline comment block \
+Line 08: `*/\n` -> comment, flags end of multline comment block \
 Line 09: `int calculate_sum(int a, int b) {\n` -> source code \
 Line 10: `return a + b; // add a + b\n` -> source code since comment is at end of line. \
 Line 11: `}\n` -> source code \
@@ -93,7 +93,7 @@ Give the following `c` block od code.
 ```c 
   int a = 10; /* this is
   a valid
-  code block */ int b = 2;
+  comment block */ int b = 2;
 
   printf("%i + %i = %i\n", a, b, a + b); // print sum of a,b to stdout
 ```
@@ -116,7 +116,7 @@ Give the following `c` block od code.
   int a = 10; 
   /* this is
   a valid
-  code block */ int b = 2;
+  comment block */ int b = 2;
 
   printf("%i + %i = %i\n", a, b, a + b);
 ```
