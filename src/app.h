@@ -19,8 +19,8 @@ typedef struct {
     uint8_t exclude_unsupported;
 } TLOC_App;
 
-TLOC_App* tloc_app_init();
-void tloc_app_destroy(TLOC_App** app);
+void tloc_app_init(TLOC_App* app);
+void tloc_app_destroy(TLOC_App* app);
 void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv);
 void tloc_app_count_lines_of_code(TLOC_App* app);
 void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path);

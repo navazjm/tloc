@@ -9,12 +9,7 @@
 #include <unistd.h>
 
 /* Initialize base application with sane defaults */
-TLOC_App* tloc_app_init() {
-    TLOC_App* app = (TLOC_App*)malloc(sizeof(TLOC_App));
-    if (app == NULL) {
-        return NULL;
-    }
-
+void tloc_app_init(TLOC_App* app) {
     app->version = "0.1.0";
     app->file_summaries = NULL;
     app->file_summaries_buffer_size = 32;
@@ -26,21 +21,17 @@ TLOC_App* tloc_app_init() {
     app->include_untracked = 0;
     app->group_by_language = 0;
     app->exclude_unsupported = 0;
-
-    return app;
 }
 
 /* Destroy base application, freeing up memory allocations */
-void tloc_app_destroy(TLOC_App** app) {
-    if (app && *app) {
-        if ((*app)->path) {
-            free((*app)->path);
+void tloc_app_destroy(TLOC_App* app) {
+    if (app) {
+        if (app->path) {
+            free(app->path);
         }
-        if ((*app)->file_summaries) {
-            free((*app)->file_summaries);
+        if (app->file_summaries) {
+            free(app->file_summaries);
         }
-        free(*app);
-        *app = NULL;
     }
 }
 
@@ -60,12 +51,12 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
     }
     if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
         printf("tloc v%s\n", app->version);
-        tloc_app_destroy(&app);
+        tloc_app_destroy(app);
         exit(EXIT_SUCCESS);
     }
     if (strcmp(argv[1], "-sl") == 0 || strcmp(argv[1], "--supported-languages") == 0) {
         tloc_language_print_supported_languages();
-        tloc_app_destroy(&app);
+        tloc_app_destroy(app);
         exit(EXIT_SUCCESS);
     }
 
@@ -104,7 +95,7 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
     struct stat path_stat;
     if (stat(app->path, &path_stat) != 0) {
         printf("Error! Unable to reslove path: %s\n", app->path);
-        tloc_app_destroy(&app);
+        tloc_app_destroy(app);
         exit(EXIT_FAILURE);
     }
 
@@ -112,7 +103,7 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
         app->file_summaries = (TLOC_File_Summary*)malloc(sizeof(TLOC_File_Summary));
         if (app->file_summaries == NULL) {
             printf("Error! Failed to allocate memory to track file information\n");
-            tloc_app_destroy(&app);
+            tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
         app->is_path_dir = 0;
@@ -121,13 +112,13 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
         app->file_summaries = (TLOC_File_Summary*)malloc(app->file_summaries_buffer_size * sizeof(TLOC_File_Summary));
         if (app->file_summaries == NULL) {
             printf("Error! Failed to allocate memory to track file information\n");
-            tloc_app_destroy(&app);
+            tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
         tloc_app_count_lines_of_code_dir(app);
     } else {
         printf("Error! %s is neither a regular file nor a directory.\n", app->path);
-        tloc_app_destroy(&app);
+        tloc_app_destroy(app);
         exit(EXIT_FAILURE);
     }
 }
@@ -140,7 +131,7 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
             realloc(app->file_summaries, app->file_summaries_buffer_size * sizeof(TLOC_File_Summary));
         if (temp == NULL) {
             printf("Error! Failed to reallocate memory to track file information\n");
-            tloc_app_destroy(&app);
+            tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
         app->file_summaries = temp;
@@ -233,7 +224,7 @@ void tloc_app_count_lines_of_code_dir_git(TLOC_App* app) {
     git_cmd_fp = popen(git_cmd, "r");
     if (git_cmd_fp == NULL) {
         printf("Failed to run 'git ls-files' cmd. Defaulting to all files\n");
-        tloc_app_destroy(&app);
+        tloc_app_destroy(app);
         free(git_cmd);
         exit(EXIT_FAILURE);
     }
