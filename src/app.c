@@ -323,15 +323,19 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
     char* output_line;
 
     for (int i = 0; i < app->file_summaries_count; i++) {
-        asprintf(&output_line, "%-35s %14d %14d %14d %14d\n", app->file_summaries[i].name,
-                 app->file_summaries[i].blank_lines, app->file_summaries[i].comment_lines,
-                 app->file_summaries[i].code_lines, app->file_summaries[i].total_lines);
+        TLOC_File_Summary file_summary = app->file_summaries[i];
+        int file_summary_name_len = strlen(file_summary.name);
+        const char* file_summary_print_name =
+            (file_summary_name_len > 35) ? (file_summary.name + file_summary_name_len - 35) : file_summary.name;
+
+        asprintf(&output_line, "%-35s %14d %14d %14d %14d\n", file_summary_print_name, file_summary.blank_lines,
+                 file_summary.comment_lines, file_summary.code_lines, file_summary.total_lines);
         strcat(output, output_line);
 
-        total_blank += app->file_summaries[i].blank_lines;
-        total_comment += app->file_summaries[i].comment_lines;
-        total_code += app->file_summaries[i].code_lines;
-        total_lines += app->file_summaries[i].total_lines;
+        total_blank += file_summary.blank_lines;
+        total_comment += file_summary.comment_lines;
+        total_code += file_summary.code_lines;
+        total_lines += file_summary.total_lines;
     }
 
     if (app->file_summaries_count > 1) {
