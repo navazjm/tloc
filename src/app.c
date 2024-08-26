@@ -1,5 +1,6 @@
 #include "app.h"
 #include "language.h"
+#include "options.h"
 #include "utils.h"
 #include <dirent.h>
 #include <stdio.h>
@@ -8,27 +9,19 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-/* Initialize base application with sane defaults */
 void tloc_app_init(TLOC_App* app) {
     app->version = "0.1.0";
+    tloc_options_init(&app->opts);
+
     app->file_summaries = NULL;
     app->file_summaries_buffer_size = 32;
     app->file_summaries_count = 0;
-
-    app->path = getcwd(NULL, 0);
-    app->is_path_dir = 1;
-    app->show_full_path = 0;
-    app->include_untracked = 0;
-    app->group_by_language = 0;
-    app->exclude_unsupported = 0;
 }
 
 /* Destroy base application, freeing up memory allocations */
 void tloc_app_destroy(TLOC_App* app) {
     if (app) {
-        if (app->path) {
-            free(app->path);
-        }
+        tloc_options_destory(&app->opts);
         if (app->file_summaries) {
             free(app->file_summaries);
         }
@@ -45,16 +38,17 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
     if (argc == 1)
         return;
 
-    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
-        tloc_print_usage_help();
+    if (strcmp(argv[1], tloc_args[0].shorthand) == 0 || strcmp(argv[1], tloc_args[0].longhand) == 0) {
+        tloc_options_args_print_help();
+        tloc_app_destroy(app);
         exit(EXIT_SUCCESS);
     }
-    if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+    if (strcmp(argv[1], tloc_args[1].shorthand) == 0 || strcmp(argv[1], tloc_args[1].longhand) == 0) {
         printf("tloc v%s\n", app->version);
         tloc_app_destroy(app);
         exit(EXIT_SUCCESS);
     }
-    if (strcmp(argv[1], "-sl") == 0 || strcmp(argv[1], "--supported-languages") == 0) {
+    if (strcmp(argv[1], tloc_args[2].shorthand) == 0 || strcmp(argv[1], tloc_args[2].longhand) == 0) {
         tloc_language_print_supported_languages();
         tloc_app_destroy(app);
         exit(EXIT_SUCCESS);
@@ -63,19 +57,7 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
     char* options[2] = {NULL, NULL};
     for (uint8_t i = 1; i < argc; i++) {
         tloc_utils_split_cmd_arg(argv[i], options);
-
-        if (strcmp(options[0], "-iu") == 0 || strcmp(options[0], "--include-untracked") == 0) {
-            app->include_untracked = 1;
-        }
-        if (strcmp(options[0], "-l") == 0 || strcmp(options[0], "--language") == 0) {
-            app->group_by_language = 1;
-        }
-        if (strcmp(options[0], "-fp") == 0 || strcmp(options[0], "--full-path") == 0) {
-            app->show_full_path = 1;
-        }
-        if (strcmp(options[0], "-eu") == 0 || strcmp(options[0], "--exclude-unsupported") == 0) {
-            app->exclude_unsupported = 1;
-        }
+        tloc_options_map_arg(&app->opts, options[0]);
 
         free(options[0]);
         if (options[1]) {
@@ -86,15 +68,15 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
 
     // set file path to second command line arg, if path exists and we have access to it
     if (access(argv[1], F_OK) == 0) {
-        asprintf(&app->path, "%s", argv[1]);
+        asprintf(&app->opts.path, "%s", argv[1]);
     }
 }
 
 /* Begins the process of parsing app->file_path */
 void tloc_app_count_lines_of_code(TLOC_App* app) {
     struct stat path_stat;
-    if (stat(app->path, &path_stat) != 0) {
-        printf("Error! Unable to reslove path: %s\n", app->path);
+    if (stat(app->opts.path, &path_stat) != 0) {
+        printf("Error! Unable to reslove path: %s\n", app->opts.path);
         tloc_app_destroy(app);
         exit(EXIT_FAILURE);
     }
@@ -106,8 +88,7 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
             tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
-        app->is_path_dir = 0;
-        tloc_app_count_lines_of_code_file(app, app->path);
+        tloc_app_count_lines_of_code_file(app, app->opts.path);
     } else if (S_ISDIR(path_stat.st_mode)) {
         app->file_summaries = (TLOC_File_Summary*)malloc(app->file_summaries_buffer_size * sizeof(TLOC_File_Summary));
         if (app->file_summaries == NULL) {
@@ -117,7 +98,7 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
         }
         tloc_app_count_lines_of_code_dir(app);
     } else {
-        printf("Error! %s is neither a regular file nor a directory.\n", app->path);
+        printf("Error! %s is neither a regular file nor a directory.\n", app->opts.path);
         tloc_app_destroy(app);
         exit(EXIT_FAILURE);
     }
@@ -147,16 +128,20 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
         return;
     }
 
-    char* stripped_file_path = strdup(file_path);
-    if (app->is_path_dir && !app->show_full_path) {
-        tloc_utils_strip_path_from_name(stripped_file_path, app->path);
+    char* temp_file_path = strdup(file_path);
+    /*
+    if (!app->opts.group_by_language) {
+        if (!app->opts.show_full_path) {
+            tloc_utils_strip_path_from_name(temp_file_path, app->opts.path);
+        }
     }
+    */
 
-    TLOC_File_Summary file_summary = {strdup(stripped_file_path), NULL, 0, 0, 0, 0};
+    TLOC_File_Summary file_summary = {strdup(temp_file_path), NULL, 0, 0, 0, 0};
     char* dot = strrchr(file_path, '.');
     file_summary.ext = dot ? strdup(dot + 1) : NULL;
     const TLOC_Language* found_supported_language = tloc_language_get_by_extension(file_summary.ext);
-    if (found_supported_language == NULL && app->exclude_unsupported) {
+    if (found_supported_language == NULL && app->opts.exclude_unsupported) {
         return;
     }
     uint8_t found_starting_multiline_comment = 0;
@@ -205,11 +190,11 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
 
 /* Parses a directory of files */
 void tloc_app_count_lines_of_code_dir(TLOC_App* app) {
-    if (!app->include_untracked) {
+    if (!app->opts.include_untracked) {
         tloc_app_count_lines_of_code_dir_git(app);
         return;
     }
-    tloc_app_count_lines_of_code_dir_recursion(app, app->path);
+    tloc_app_count_lines_of_code_dir_recursion(app, app->opts.path);
 }
 
 /*
@@ -218,7 +203,7 @@ void tloc_app_count_lines_of_code_dir(TLOC_App* app) {
  */
 void tloc_app_count_lines_of_code_dir_git(TLOC_App* app) {
     char* git_cmd;
-    asprintf(&git_cmd, "git ls-files %s", app->path);
+    asprintf(&git_cmd, "git ls-files %s", app->opts.path);
 
     FILE* git_cmd_fp;
     git_cmd_fp = popen(git_cmd, "r");
@@ -286,7 +271,7 @@ void tloc_app_display_results(TLOC_App* app) {
         return;
     }
 
-    if (app->group_by_language) {
+    if (app->opts.group_by_language) {
         tloc_app_display_results_by_language(app);
         return;
     }
@@ -405,34 +390,4 @@ void tloc_app_display_results_by_language(TLOC_App* app) {
     free(output);
     free(output_line);
     free(language_summary_groups);
-}
-
-/* Print the usage help options */
-void tloc_print_usage_help() {
-    printf("USAGE: tloc optional/path/ [options] \n"
-           "\n"
-           "OPTIONAL PATH:\n"
-           "\n"
-           "* Can be a path to a directory or a specific file\n"
-           "* Will default to CWD, if one of the following conditions is met:\n"
-           "    1. Omitted\n"
-           "    2. Path does not exist\n"
-           "    3. Do not have read access permisions\n"
-           "    4. Not provided as the second command-line arg.\n"
-           "\n"
-           "META OPTIONS:\n"
-           "    -h, --help                      Display list of command-line options.\n"
-           "    -v, --version                   Display installed version of tloc.\n"
-           "    -sl, --supported-languages      Display a list of supported programming languages.\n"
-           "\n"
-           "FILTERING AND SORTING OPTIONS:\n"
-           "    -iu, --include-untracked        Include files not being tracked by Git.\n"
-           "\n"
-           "DISPLAY OPTIONS:\n"
-           "    -l, --language                  List data by programming languages, not by files.\n"
-           "    -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.\n"
-           "    -fp, --full-path                Expand file name to show full path.\n"
-           "\n"
-           "For more details, please visit: "
-           "https://github.com/navazjm/tloc/blob/main/docs/options.md\n");
 }

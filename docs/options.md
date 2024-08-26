@@ -8,9 +8,9 @@ files returned by `git ls-files <path>`, and it renders data for each file indiv
 Using the options listed below, you can customize how `tloc` renders the data to 
 suit your preferences.
 
-### META OPTIONS:
+## META OPTIONS:
 
-#### Help Option
+### Help Option
 
 **Shorthand**:   `-h`\
 **Longhand**:    `--help`\
@@ -18,7 +18,7 @@ suit your preferences.
 
 ---
 
-#### Version Option
+### Version Option
 
 **Shorthand**:   `-v`\
 **Longhand**:    `--version`\
@@ -26,7 +26,7 @@ suit your preferences.
 
 ---
 
-#### Supported Language Option
+### Supported Language Option
 
 **Shorthand**:   `-sl`\
 **Longhand**:    `--supported-languages`\
@@ -52,9 +52,9 @@ is counted.
 
 ---
 
-### FILTERING AND SORTING OPTIONS:
+## FILTERING AND SORTING OPTIONS:
 
-#### Include Untracked Option
+### Include Untracked Option
 
 **Shorthand**:   `-iu`\
 **Longhand**:    `--include-untracked`\
@@ -118,9 +118,9 @@ TOTAL:                                         102             82            571
 
 ---
 
-### DISPLAY OPTIONS:
+## DISPLAY OPTIONS:
 
-#### Language Option
+### Language Option
 
 **Shorthand**:   `-l`\
 **Longhand**:    `--language`\
@@ -145,7 +145,7 @@ TOTAL:                      22            206             82            881     
 
 ---
 
-#### Exclude Unsupported Option
+### Exclude Unsupported Option
 
 **Shorthand**:   `-eu`\
 **Longhand**:    `--exclude-unsupported`\
@@ -266,7 +266,14 @@ when displaying.
 
 ## Adding a new option
 
-1. Update this file with the new shorthand, longhand, and description of the option
-2. In src/app.c, modify `loc_app_parse_cmd_args` to include the new option
-3. Also, in src/app.c, modify `tloc_print_usage_help` to include the new option
-4. Finally, implement the logic to parse/render data based on the new option.
+1. Add option to global list of valid args `const TLOC_Arg tloc_args[]` in `src/options.c`
+    - If option is a meta option (these options run a separate process that normally terminates program after running): 
+        1. modify `tloc_app_parse_cmd_args()` in `src/app.c` to include the new option
+        1. define inline `TLOC_Set_Option_Func` function as `NULL`
+    - If option is NOT a meta option:
+        1. define inline `TLOC_Set_Option_Func` function
+1. Update both `const size_t tloc_args_filtering_sorting_starting_idx` and `const size_t tloc_args_displaying_starting_idx` in `src/options.c`
+1. Implement the logic to parse/render data based on the new option.
+1. Update documentation:
+    - Update this file with the new shorthand, longhand, description, and example usage of the option
+    - In README, update usage section displaying result of `tloc -h`  
