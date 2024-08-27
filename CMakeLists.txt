@@ -25,11 +25,11 @@ set_target_properties(tloc_debug PROPERTIES
 
 ### Test Build ###
 file(GLOB TLOC_TEST_SOURCES "tests/*.c")
-add_executable(tloc_test ${WT_TEST_SOURCES})
+add_executable(tloc_test ${TLOC_TEST_SOURCES})
 target_compile_options(tloc_test PRIVATE -Wall -Wextra -Werror)
-target_include_directories(tloc_test PRIVATE src tests libs/munit)
-target_sources(tloc_test PRIVATE libs/munit/munit.c)
-target_link_libraries(tloc_test PRIVATE wt_lib)  # Link the library to the test executable
+target_include_directories(tloc_test PRIVATE src tests vendors/munit)
+target_sources(tloc_test PRIVATE vendors/munit/munit.c)
+target_link_libraries(tloc_test PRIVATE tloc_lib)  # Link the library to the test executable
 
 
 # allows user to run `sudo make tloc install` to create tloc executable and pace it in /usr/local/bin/ 

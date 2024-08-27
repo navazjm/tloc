@@ -31,7 +31,8 @@ void tloc_utils_split_cmd_arg(const char* input, char* tokens[2]) {
     tokens[0][name_length] = '\0';
 
     // Allocate and copy the value part
-    tokens[1] = strdup(equal_sign_pos + 1);
+    char* temp_value = strdup(equal_sign_pos + 1);
+    tokens[1] = strlen(temp_value) != 0 ? temp_value : NULL;
 }
 
 /*
@@ -73,33 +74,37 @@ char* tloc_utils_string_trim_whitespace(char* str) {
  *
  * We use it to determine if a line of source code ends with chars representing end of a multiline comment.
  */
-int tloc_utils_string_ends_with(const char* str, const char* suffix) {
+bool tloc_utils_string_ends_with(const char* str, const char* suffix) {
     if (str == NULL || suffix == NULL) {
-        return 0;
+        return false;
     }
 
     size_t str_len = strlen(str);
     size_t suffix_len = strlen(suffix);
 
     if (suffix_len > str_len) {
-        return 0;
+        return false;
     }
 
     return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
 
 /*
- * Strips root path name from the file name and replaces it with a '.'
+ * Strips prefix from string
  *
- * Input:  "/tloc/src/main.c", "/tloc/src"
- * Output: "./main.c"
+ * Input:  "example", "ex"
+ * Output: "ample"
  */
-void tloc_utils_strip_path_from_name(char* file_name, const char* path_name) {
-    size_t path_name_len = strlen(path_name);
-    size_t file_name_len = strlen(file_name);
+void tloc_utils_string_strip_prefix(char* dest, const char* prefix) {
+    if (dest == NULL || prefix == NULL) {
+        return;
+    }
 
-    if (strncmp(file_name, path_name, path_name_len) == 0) {
-        memmove(file_name + 1, file_name + path_name_len, file_name_len - path_name_len + 1);
-        file_name[0] = '.';
+    size_t dest_len = strlen(dest);
+    size_t prefix_len = strlen(prefix);
+
+    if (strncmp(dest, prefix, prefix_len) == 0) {
+        memmove(dest, dest + prefix_len, dest_len - prefix_len + 1);
     }
 }
+
