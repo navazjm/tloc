@@ -17,9 +17,11 @@ const TLOC_Language tloc_supported_languages[] = {
 /*
  * Returns a supported programming language based on file extension
  *
+ * Supported language
  * Input:  .md
  * Output: {"Markdown", "md", NULL, "<!---", "-->"}
  *
+ * Unsupported language
  * Input:  .txt
  * Output: NULL
  *
@@ -36,13 +38,13 @@ const TLOC_Language* tloc_language_get_by_extension(const char* extension) {
     for (size_t i = 0; i < num_languages; i++) {
         char* token;
         char* extensions = strdup(tloc_supported_languages[i].extensions);
-        token = strtok(extensions, ",");
+        token = strtok(extensions, ", ");
         while (token != NULL) {
             if (strcmp(token, extension) == 0) {
                 free(extensions);
                 return &tloc_supported_languages[i];
             }
-            token = strtok(NULL, ",");
+            token = strtok(NULL, ", ");
         }
         free(extensions);
     }
