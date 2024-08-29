@@ -108,3 +108,95 @@ void tloc_utils_string_strip_prefix(char* dest, const char* prefix) {
     }
 }
 
+/*
+ * Helper function to format file path depending on TLOC_PP_Option
+ * TLOC_PP_NONE: /Users/michael/repos/tloc/src/tloc.c -> tloc.c
+ * TLOC_PP: /Users/michael/repos/tloc/src/tloc.c -> /src/tloc.c
+ * TLOC_PP_S: /Users/michael/repos/tloc/src/tloc.c -> /s/tloc.c
+ * TLOC_PP_A: /Users/michael/repos/tloc/src/tloc.c -> /Users/michael/repos/tloc/src/tloc.c
+ * TLOC_PP_AS: /Users/michael/repos/tloc/src/tloc.c -> /U/m/r/t/s/tloc.c
+ */
+void tloc_utils_format_file_path_by_pp_option(char* file_path, TLOC_PP_Option pp_opt) {
+    switch (pp_opt) {
+        case TLOC_PP_NONE: { // trim file path to just filename.ext
+            char* last_slash = strrchr(file_path, '/');
+            if (last_slash) {
+                // Move the string to point to the character after the last '/'
+                memmove(file_path, last_slash + 1, strlen(last_slash));
+            }
+            break;
+        }
+        case TLOC_PP: { // trim file path to parent/filename.ext
+            char* last_slash = strrchr(file_path, '/');
+            if (last_slash) {
+                *last_slash = '\0'; // Temporarily terminate the string before the last slash
+                char* second_last_slash = strrchr(file_path, '/');
+                *last_slash = '/'; // Restore the last slash
+                if (second_last_slash) {
+                    // move the string to start after the second-to-last '/'
+                    memmove(file_path, second_last_slash, strlen(second_last_slash) + 1);
+                }
+            }
+            break;
+        }
+        case TLOC_PP_S: { // trim file path to p/filename.ext, p being the first letter of parent dir
+            char* last_slash = strrchr(file_path, '/');
+            if (last_slash) {
+                *last_slash = '\0'; // Temporarily terminate the string before the last slash
+                char* second_last_slash = strrchr(file_path, '/');
+                *last_slash = '/'; // Restore the last slash
+                if (second_last_slash) {
+                    // move the string to start after the second-to-last '/'
+                    memmove(file_path, second_last_slash, strlen(second_last_slash));
+                    memmove(file_path + 2, last_slash, strlen(last_slash));
+                    file_path[strlen(last_slash) + 2] = '\0';
+                }
+            }
+            break;
+        }
+        case TLOC_PP_A: {
+            // Already stored the full file path in file_path, no modification needed
+            break;
+        }
+        case TLOC_PP_AS: { // trim file path to only show the first letter of all directories
+            char* p = file_path;
+            char* next_slash;
+            while ((next_slash = strchr(p, '/')) != NULL) {
+                if (p != file_path) {
+                    memmove(p + 1, next_slash, strlen(next_slash) + 1);
+                    p += 2;
+                } else {
+                    p = next_slash + 1;
+                }
+            }
+            break;
+        }
+    }
+}
+
+/*
+ * Helper function to normalize file path names
+ * ../tloc/src/tloc.c -> /tloc/src/tloc.c
+ * ./tloc/src/tloc.c  -> /tloc/src/tloc.c
+ * /tloc/src/tloc.c   -> /tloc/src/tloc.c
+ * tloc/src/tloc.c    -> /tloc/src/tloc.c
+ */
+void tloc_utils_normalize_file_path(char* file_path) {
+    size_t file_path_len = strlen(file_path);
+    if (file_path[0] == '/') {
+        return;
+    }
+
+    if (strncmp(file_path, "./", 2) == 0) {
+        memmove(file_path, file_path + 1, file_path_len);
+        return;
+    }
+
+    if (strncmp(file_path, "../", 3) == 0) {
+        memmove(file_path, file_path + 2, file_path_len - 1);
+        return;
+    }
+
+    memmove(file_path + 1, file_path, file_path_len + 1);
+    file_path[0] = '/';
+}

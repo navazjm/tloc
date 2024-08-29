@@ -187,79 +187,58 @@ is not known, will also not be displayed.
 
 ---
 
-#### Full Path Option
+### Print Parent Option
 
-**Shorthand**:   `-fp`\
-**Longhand**:    `--full-path`\
-**Description**: Expand file name to show full path. 
+**Shorthand**:   `-pp`\
+**Longhand**:    `--print-parent`\
+**Description**: Print file name as parent/filename. 
 
 <details>
 <summary>View Usage</summary>
 <pre>
-$ tloc ../aoc/2023/src -iu -fp
-------------------------------------------------------------------------------------------------
-File name                                    blank        comment           code          total
-------------------------------------------------------------------------------------------------
-../aoc/2023/src/day_05/day_05.cpp               10              4             55             69
-../aoc/2023/src/day_05/day_05.h                  3              0              8             11
-../aoc/2023/src/day_02/day_02.cpp                3              0             87             90
-../aoc/2023/src/day_02/day_02.h                  3              0              8             11
-../aoc/2023/src/day_03/day_03.h                  3              0              8             11
-../aoc/2023/src/day_03/day_03.cpp                5              0            110            115
-../aoc/2023/src/day_04/day_04.cpp                3              0             70             73
-../aoc/2023/src/day_04/day_04.h                  3              0              8             11
-../aoc/2023/src/template/day_x.h                 3              0              8             11
-../aoc/2023/src/template/day_x.cpp               2              0              8             10
-../aoc/2023/src/day_01/day_01.cpp                5              0             68             73
-../aoc/2023/src/day_01/day_01.h                  3              0              8             11
-../aoc/2023/src/day_06/day_06.cpp                7              0             67             74
-../aoc/2023/src/day_06/day_06.h                  3              0              8             11
-../aoc/2023/src/day_08/day_08.h                  3              0              8             11
-../aoc/2023/src/day_08/day_08.cpp               15              0             98            113
-../aoc/2023/src/day_09/day_09.h                  3              0              8             11
-../aoc/2023/src/day_09/day_09.cpp                8              0             79             87
-../aoc/2023/src/day_07/day_07.h                  3              0              8             11
-../aoc/2023/src/day_07/day_07.cpp               19              3            133            155
-../aoc/2023/src/main.cpp                         6              0            104            110
-------------------------------------------------------------------------------------------------
-TOTAL:                                         113              7            959           1079
-------------------------------------------------------------------------------------------------
 </pre>
+</details>
+
+---
+
+### Parent Parent Short Option
+
+**Shorthand**:   `-pp-s`\
+**Longhand**:    `--print-parent-short`\
+**Description**: Print file name as p/filename. 
+
+<details>
+<summary>View Usage</summary>
 <pre>
-$ tloc ../aoc/2023/src -iu
-------------------------------------------------------------------------------------------------
-File name                                    blank        comment           code          total
-------------------------------------------------------------------------------------------------
-./day_05/day_05.cpp                             10              4             55             69
-./day_05/day_05.h                                3              0              8             11
-./day_02/day_02.cpp                              3              0             87             90
-./day_02/day_02.h                                3              0              8             11
-./day_03/day_03.h                                3              0              8             11
-./day_03/day_03.cpp                              5              0            110            115
-./day_04/day_04.cpp                              3              0             70             73
-./day_04/day_04.h                                3              0              8             11
-./template/day_x.h                               3              0              8             11
-./template/day_x.cpp                             2              0              8             10
-./day_01/day_01.cpp                              5              0             68             73
-./day_01/day_01.h                                3              0              8             11
-./day_06/day_06.cpp                              7              0             67             74
-./day_06/day_06.h                                3              0              8             11
-./day_08/day_08.h                                3              0              8             11
-./day_08/day_08.cpp                             15              0             98            113
-./day_09/day_09.h                                3              0              8             11
-./day_09/day_09.cpp                              8              0             79             87
-./day_07/day_07.h                                3              0              8             11
-./day_07/day_07.cpp                             19              3            133            155
-./main.cpp                                       6              0            104            110
-------------------------------------------------------------------------------------------------
-TOTAL:                                         113              7            959           1079
-------------------------------------------------------------------------------------------------
 </pre>
+</details>
 
-By default, if `-fp` is not passed in and the provided path is a directory of files,
-`tloc` will trim the provided path from each individual file name to save on space
-when displaying.
+---
 
+### Parent Parent All Option
+
+**Shorthand**:   `-pp-a`\
+**Longhand**:    `--print-parent-all`\
+**Description**: Print file name including all parent dirs relative to provided path.
+
+<details>
+<summary>View Usage</summary>
+<pre>
+</pre>
+</details>
+
+---
+
+### Parent Parent All Option
+
+**Shorthand**:   `-pp-as`\
+**Longhand**:    `--print-parent-all-short`\
+**Description**:Print file name including only first letter for all parent dirs relative to provided path. 
+
+<details>
+<summary>View Usage</summary>
+<pre>
+</pre>
 </details>
 
 ---

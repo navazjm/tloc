@@ -229,9 +229,13 @@ META OPTIONS:
 FILTERING AND SORTING OPTIONS:
     -iu, --include-untracked             Include files not being tracked by Git.
 
-    -eu, --exclude-unsupported      Exclude unsupported file types/langauges from being displayed.
-    -fp, --full-path                Expand file name to show full path
+DISPLAYING OPTIONS:
+    -l, --language                       List data by programming languages, not by files.
     -eu, --exclude-unsupported           Exclude unsupported file types/langauges from being displayed.
+    -pp, --print-parent                  Print file name as parent/filename.
+    -pp-s, --print-parent-short          Print file name as p/filename.
+    -pp-a, --print-parent-all            Print file name including all parent dirs relative to provided path.
+    -pp-as, --print-parent-all-short     Print file name including only first letter for all parent dirs relative to provided path.
 
 For more details, please visit: https://github.com/navazjm/tloc/blob/main/docs/options.md
 ```

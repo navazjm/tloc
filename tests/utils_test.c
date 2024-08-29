@@ -1,5 +1,6 @@
 #include "utils_test.h"
 #include "munit.h"
+#include "options.h"
 #include "utils.h"
 #include <string.h>
 
@@ -94,9 +95,61 @@ MunitResult tloc_utils_string_strip_prefix_test(const MunitParameter params[], v
     return MUNIT_OK;
 }
 
-MunitResult tloc_utils_trim_path_by_pp_option_test(const MunitParameter params[], void* data) {
-    (void)params;
+static char* tloc_utils_normalize_file_path_test_path_params[] = {
+    "/repos/tloc/src/main.c", "./repos/tloc/src/main.c", "../repos/tloc/src/main.c", "repos/tloc/src/main.c", NULL};
+MunitParameterEnum tloc_utils_normalize_file_path_test_params[] = {
+    {"path", tloc_utils_normalize_file_path_test_path_params},
+    {NULL, NULL},
+};
+MunitResult tloc_utils_normalize_file_path_test(const MunitParameter params[], void* data) {
     (void)data;
+
+    const char* path_param = munit_parameters_get(params, "path");
+    char* path = strdup(path_param);
+
+    tloc_utils_normalize_file_path(path);
+    munit_assert_string_equal(path, "/repos/tloc/src/main.c");
+
+    return MUNIT_OK;
+}
+
+static char* tloc_utils_format_file_path_by_pp_option_test_path_params[] = {"/repos/tloc/src/main.c", NULL};
+static char* tloc_utils_format_file_path_by_pp_option_test_pp_flag_params[] = {"NONE", "pp",    "pp-s",
+                                                                               "pp-a", "pp-as", NULL};
+MunitParameterEnum tloc_utils_format_file_path_by_pp_option_test_params[] = {
+    {"path", tloc_utils_format_file_path_by_pp_option_test_path_params},
+    {"flag", tloc_utils_format_file_path_by_pp_option_test_pp_flag_params},
+    {NULL, NULL},
+};
+MunitResult tloc_utils_format_file_path_by_pp_option_test(const MunitParameter params[], void* data) {
+    (void)data;
+
+    const char* path_param = munit_parameters_get(params, "path");
+    char* path = strdup(path_param);
+    const char* flag_param = munit_parameters_get(params, "flag");
+
+    if (strcmp(flag_param, "NONE") == 0) {
+        TLOC_PP_Option opt = TLOC_PP_NONE;
+        tloc_utils_format_file_path_by_pp_option(path, opt);
+        munit_assert_string_equal(path, "main.c");
+    } else if (strcmp(flag_param, "pp") == 0) {
+        TLOC_PP_Option opt = TLOC_PP;
+        tloc_utils_format_file_path_by_pp_option(path, opt);
+        munit_assert_string_equal(path, "/src/main.c");
+    } else if (strcmp(flag_param, "pp-s") == 0) {
+        TLOC_PP_Option opt = TLOC_PP_S;
+        tloc_utils_format_file_path_by_pp_option(path, opt);
+        munit_assert_string_equal(path, "/s/main.c");
+    } else if (strcmp(flag_param, "pp-a") == 0) {
+        TLOC_PP_Option opt = TLOC_PP_A;
+        tloc_utils_format_file_path_by_pp_option(path, opt);
+        munit_assert_string_equal(path, path_param);
+    } else {
+        TLOC_PP_Option opt = TLOC_PP_AS;
+        tloc_utils_format_file_path_by_pp_option(path, opt);
+        munit_assert_string_equal(path, "/r/t/s/main.c");
+    }
+
     return MUNIT_OK;
 }
 
@@ -108,8 +161,11 @@ MunitTest tloc_utils_tests[] = {{(char*)"/split_cmd_arg_test", tloc_utils_split_
                                  MUNIT_TEST_OPTION_NONE, tloc_utils_string_ends_with_test_params},
                                 {(char*)"/string_strip_prefix_test", tloc_utils_string_strip_prefix_test, NULL, NULL,
                                  MUNIT_TEST_OPTION_NONE, tloc_utils_string_strip_prefix_test_params},
-                                {(char*)"/trim_path_by_pp_option_test", tloc_utils_trim_path_by_pp_option_test, NULL,
-                                 NULL, MUNIT_TEST_OPTION_NONE, NULL},
+                                {(char*)"/normalize_path_test", tloc_utils_normalize_file_path_test, NULL, NULL,
+                                 MUNIT_TEST_OPTION_NONE, tloc_utils_normalize_file_path_test_params},
+                                {(char*)"/format_path_by_pp_option_test", tloc_utils_format_file_path_by_pp_option_test,
+                                 NULL, NULL, MUNIT_TEST_OPTION_NONE,
+                                 tloc_utils_format_file_path_by_pp_option_test_params},
                                 {NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}};
 
 MunitSuite tloc_utils_test_suite = {(char*)"/utils", tloc_utils_tests, NULL, 1, MUNIT_SUITE_OPTION_NONE};

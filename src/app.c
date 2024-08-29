@@ -57,7 +57,7 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
     char* options[2] = {NULL, NULL};
     for (uint8_t i = 1; i < argc; i++) {
         tloc_utils_split_cmd_arg(argv[i], options);
-        tloc_options_map_arg(&app->opts, options[0]);
+        tloc_options_map_arg(&app->opts, options[0], options[1]);
 
         free(options[0]);
         if (options[1]) {
@@ -68,7 +68,7 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
 
     // set file path to second command line arg, if path exists and we have access to it
     if (access(argv[1], F_OK) == 0) {
-        asprintf(&app->opts.path, "%s", argv[1]);
+        app->opts.path = strdup(argv[1]);
     }
 }
 
@@ -128,16 +128,7 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
         return;
     }
 
-    char* temp_file_path = strdup(file_path);
-    /*
-    if (!app->opts.group_by_language) {
-        if (!app->opts.show_full_path) {
-            tloc_utils_strip_path_from_name(temp_file_path, app->opts.path);
-        }
-    }
-    */
-
-    TLOC_File_Summary file_summary = {strdup(temp_file_path), NULL, 0, 0, 0, 0};
+    TLOC_File_Summary file_summary = {strdup(file_path), NULL, 0, 0, 0, 0};
     char* dot = strrchr(file_path, '.');
     file_summary.ext = dot ? strdup(dot + 1) : NULL;
     const TLOC_Language* found_supported_language = tloc_language_get_by_extension(file_summary.ext);
@@ -246,7 +237,11 @@ void tloc_app_count_lines_of_code_dir_recursion(TLOC_App* app, const char* dir_p
         }
 
         char* full_path;
-        asprintf(&full_path, "%s/%s", dir_path, entry->d_name);
+        if (dir_path[strlen(dir_path) - 1] != '/') {
+            asprintf(&full_path, "%s/%s", dir_path, entry->d_name);
+        } else {
+            asprintf(&full_path, "%s%s", dir_path, entry->d_name);
+        }
 
         if (stat(full_path, &entry_info) != 0) {
             continue;
@@ -300,11 +295,24 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
 
     for (int i = 0; i < app->file_summaries_count; i++) {
         TLOC_File_Summary file_summary = app->file_summaries[i];
-        int file_summary_name_len = strlen(file_summary.name);
-        const char* file_summary_print_name =
-            (file_summary_name_len > 35) ? (file_summary.name + file_summary_name_len - 35) : file_summary.name;
 
-        asprintf(&output_line, "%-35s %14d %14d %14d %14d\n", file_summary_print_name, file_summary.blank_lines,
+        // cannot use strdup bc we may have prepend file name with '/' when formatting based on TLOC_PP_Option
+        char* temp_file_summary_name = (char*)malloc((strlen(file_summary.name) + 2) * sizeof(char));
+        if (temp_file_summary_name == NULL) {
+            printf("Failed to allocate memory for formatting file summary name\n");
+            tloc_app_destroy(app);
+            exit(EXIT_FAILURE);
+        }
+        strcpy(temp_file_summary_name, file_summary.name);
+
+        tloc_utils_normalize_file_path(temp_file_summary_name);
+        tloc_utils_format_file_path_by_pp_option(temp_file_summary_name, app->opts.print_parent);
+        int temp_file_summary_name_len = strlen(temp_file_summary_name);
+        if (temp_file_summary_name_len > 35) {
+            temp_file_summary_name = temp_file_summary_name + temp_file_summary_name_len - 35;
+        }
+
+        asprintf(&output_line, "%-35s %14d %14d %14d %14d\n", temp_file_summary_name, file_summary.blank_lines,
                  file_summary.comment_lines, file_summary.code_lines, file_summary.total_lines);
         strcat(output, output_line);
 
@@ -312,6 +320,9 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
         total_comment += file_summary.comment_lines;
         total_code += file_summary.code_lines;
         total_lines += file_summary.total_lines;
+
+        free(temp_file_summary_name);
+        temp_file_summary_name = NULL;
     }
 
     if (app->file_summaries_count > 1) {
