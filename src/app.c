@@ -316,7 +316,7 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
         tloc_utils_format_file_path_by_pp_option(temp_file_summary_name, app->opts.print_parent);
         int temp_file_summary_name_len = strlen(temp_file_summary_name);
         if (temp_file_summary_name_len > 35) {
-            temp_file_summary_name = temp_file_summary_name + temp_file_summary_name_len - 35;
+            memmove(temp_file_summary_name, temp_file_summary_name + temp_file_summary_name_len - 35, 36);
         }
 
         asprintf(&output_line, "%-35s %14d %14d %14d %14d\n", temp_file_summary_name, file_summary.blank_lines,
