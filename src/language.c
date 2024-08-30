@@ -72,9 +72,10 @@ void tloc_language_print_supported_languages() {
         asprintf(&output_line, "%-20s %-14s\n", tloc_supported_languages[i].name,
                  tloc_supported_languages[i].extensions);
         strcat(output, output_line);
+        free(output_line);
+        output_line = NULL;
     }
 
     printf("%s", output);
     free(output);
-    free(output_line);
 }

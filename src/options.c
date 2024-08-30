@@ -127,11 +127,12 @@ void tloc_options_args_print_help() {
 
         asprintf(&output_line, "%-40s %s\n", arg_flag, arg.description);
         strcat(output, output_line);
+        free(output_line);
+        free(arg_flag);
     }
 
     strcat(output, "\nFor more details, please visit: https://github.com/navazjm/tloc/blob/main/docs/options.md\n");
 
     printf("%s", output);
     free(output);
-    free(output_line);
 }

@@ -206,7 +206,7 @@ void tloc_app_count_lines_of_code_dir_git(TLOC_App* app) {
     FILE* git_cmd_fp;
     git_cmd_fp = popen(git_cmd, "r");
     if (git_cmd_fp == NULL) {
-        printf("Failed to run 'git ls-files' cmd. Defaulting to all files\n");
+        printf("Error! Failed to run 'git ls-files' cmd.\n");
         tloc_app_destroy(app);
         free(git_cmd);
         exit(EXIT_FAILURE);
@@ -225,6 +225,7 @@ void tloc_app_count_lines_of_code_dir_git(TLOC_App* app) {
     if (git_cmd_file_line) {
         free(git_cmd_file_line);
     }
+    free(git_cmd);
 }
 
 /* Starting at app->path, navigate inside all subdirs and parse each file by calling tloc_count_lines_of_code_file */
@@ -259,6 +260,8 @@ void tloc_app_count_lines_of_code_dir_recursion(TLOC_App* app, const char* dir_p
         } else if (S_ISREG(entry_info.st_mode)) {
             tloc_app_count_lines_of_code_file(app, full_path);
         }
+
+        free(full_path);
     }
 
     closedir(dir);
@@ -330,6 +333,8 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
 
         free(temp_file_summary_name);
         temp_file_summary_name = NULL;
+        free(output_line);
+        output_line = NULL;
     }
 
     if (app->file_summaries_count > 1) {
@@ -339,11 +344,12 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
         strcat(output, output_line);
         strcat(output,
                "------------------------------------------------------------------------------------------------\n");
+        free(output_line);
+        output_line = NULL;
     }
 
     printf("%s", output);
     free(output);
-    free(output_line);
 }
 
 /* Group file summaries by supported language name, displaying results by language */
@@ -388,6 +394,8 @@ void tloc_app_display_results_by_language(TLOC_App* app) {
                  langauge_summary_group.comment_lines, langauge_summary_group.code_lines,
                  langauge_summary_group.total_lines);
         strcat(output, output_line);
+        free(output_line);
+        output_line = NULL;
 
         total_blank += langauge_summary_group.blank_lines;
         total_comment += langauge_summary_group.comment_lines;
@@ -402,10 +410,11 @@ void tloc_app_display_results_by_language(TLOC_App* app) {
                  total_lines);
         strcat(output, output_line);
         strcat(output, "-------------------------------------------------------------------------------------------\n");
+        free(output_line);
+        output_line = NULL;
     }
 
     printf("%s", output);
     free(output);
-    free(output_line);
     free(language_summary_groups);
 }
