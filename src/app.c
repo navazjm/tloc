@@ -188,7 +188,7 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
 
 /* Parses a directory of files */
 void tloc_app_count_lines_of_code_dir(TLOC_App* app) {
-    if (!app->opts.include_untracked) {
+    if (app->opts.use_git) {
         tloc_app_count_lines_of_code_dir_git(app);
         return;
     }

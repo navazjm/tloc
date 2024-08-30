@@ -7,7 +7,7 @@
 /* Initialize base application options with sane defaults */
 void tloc_options_init(TLOC_Options* opts) {
     opts->path = getcwd(NULL, 0);
-    opts->include_untracked = false;
+    opts->use_git = false;
     opts->group_by_language = false;
     opts->exclude_unsupported = false;
     opts->print_parent = TLOC_PP_NONE;
@@ -23,7 +23,7 @@ void tloc_options_destory(TLOC_Options* opts) {
 /* Dev Helper: Display all opts names and values */
 void tloc_options_print(TLOC_Options* opts) {
     printf("opts->path: %s\n", opts->path);
-    printf("opts->include_untracked: %s\n", opts->include_untracked ? "True" : "False");
+    printf("opts->use_git: %s\n", opts->use_git ? "True" : "False");
     printf("opts->group_by_language: %s\n", opts->group_by_language ? "True" : "False");
     printf("opts->exclude_unsupported: %s\n", opts->exclude_unsupported ? "True" : "False");
     switch (opts->print_parent) {
@@ -52,7 +52,7 @@ const TLOC_Arg tloc_args[] = {
     {"-v", "--version", "Display installed version of tloc.", NULL},
     {"-sl", "--supported-languages", "Display a list of supported programming languages.", NULL},
     // FILTERING AND SORTING OPTIONS
-    {"-iu", "--include-untracked", "Include files not being tracked by Git.", tloc_options_set_include_untracked},
+    {"-g", "--git", "Only include files being tracked by Git.", tloc_options_set_use_git},
     // DISPLAYING OPTIONS
     {"-l", "--language", "List data by programming languages, not by files.", tloc_options_set_group_by_language},
     {"-eu", "--exclude-unsupported", "Exclude unsupported file types/langauges from being displayed.",

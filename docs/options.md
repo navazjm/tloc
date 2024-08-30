@@ -46,19 +46,17 @@ Markdown             md
 JavaScript           js
 TypeScript           ts
 </pre>
-Files with an unsupported language will be tracked as `N/A` where only total lines
-is counted.
 </details>
 
 ---
 
 ## FILTERING AND SORTING OPTIONS:
 
-### Include Untracked Option
+### Git Option
 
-**Shorthand**:   `-iu`\
-**Longhand**:    `--include-untracked`\
-**Description**: Include files not being tracked by Git. 
+**Shorthand**:   `-g`\
+**Longhand**:    `--git`\
+**Description**: Only include files being tracked by Git. 
 
 <details>
 <summary>View Usage</summary>
@@ -75,41 +73,41 @@ no changes added to commit (use "git add" and/or "git commit -a")
 </pre>
 
 Using git status, you can see `src/file_not_tracked.c` is an untracked file. Therefore,
-running `tloc` without `-iu` flag, will ignore the untracked file. 
+running `tloc` with `-g` flag, will ignore the untracked file. 
 
 <pre> 
 $ tloc src
 ------------------------------------------------------------------------------------------------
 File name                                    blank        comment           code          total
 ------------------------------------------------------------------------------------------------
-./app.c                                         55             21            367            443
-./app.h                                          6              0             30             36
-./language.c                                    10             18             50             78
-./language.h                                     4              0             13             17
-./summary.c                                      2              3             19             24
-./summary.h                                      4              0             21             25
-./tloc.c                                         3              0             15             18
-./utils.c                                       16             40             49            105
-./utils.h                                        2              0              7              9
+utils.h                                        2              0              7              9
+language.h                                     4              0             13             17
+app.h                                          6              0             30             36
+summary.c                                      2              3             19             24
+utils.c                                       16             40             49            105
+file_not_tracked.c                             0              0              0              0
+language.c                                    10             18             50             78
+summary.h                                      4              0             21             25
+tloc.c                                         3              0             15             18
+app.c                                         55             21            367            443
 ------------------------------------------------------------------------------------------------
 TOTAL:                                         102             82            571            755
 ------------------------------------------------------------------------------------------------
 </pre>
 <pre>
-$ tloc src -iu
+$ tloc src -g
 ------------------------------------------------------------------------------------------------
 File name                                    blank        comment           code          total
 ------------------------------------------------------------------------------------------------
-./utils.h                                        2              0              7              9
-./language.h                                     4              0             13             17
-./app.h                                          6              0             30             36
-./summary.c                                      2              3             19             24
-./utils.c                                       16             40             49            105
-./file_not_tracked.c                             0              0              0              0
-./language.c                                    10             18             50             78
-./summary.h                                      4              0             21             25
-./tloc.c                                         3              0             15             18
-./app.c                                         55             21            367            443
+app.c                                         55             21            367            443
+app.h                                          6              0             30             36
+language.c                                    10             18             50             78
+language.h                                     4              0             13             17
+summary.c                                      2              3             19             24
+summary.h                                      4              0             21             25
+tloc.c                                         3              0             15             18
+utils.c                                       16             40             49            105
+utils.h                                        2              0              7              9
 ------------------------------------------------------------------------------------------------
 TOTAL:                                         102             82            571            755
 ------------------------------------------------------------------------------------------------
@@ -141,6 +139,8 @@ C/C++ Header                 4             16              0             71     
 TOTAL:                      22            206             82            881           1918
 -------------------------------------------------------------------------------------------
 </pre>
+Files with an unsupported language will be tracked as `N/A` where only total lines
+is counted.
 </details>
 
 ---
@@ -253,6 +253,7 @@ is not known, will also not be displayed.
         1. define inline `TLOC_Set_Option_Func` function
 1. Update both `const size_t tloc_args_filtering_sorting_starting_idx` and `const size_t tloc_args_displaying_starting_idx` in `src/options.c`
 1. Implement the logic to parse/render data based on the new option.
+1. Add tests
 1. Update documentation:
     - Update this file with the new shorthand, longhand, description, and example usage of the option
     - In README, update usage section displaying result of `tloc -h`  

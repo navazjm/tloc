@@ -8,7 +8,7 @@ typedef enum { TLOC_PP_NONE, TLOC_PP, TLOC_PP_S, TLOC_PP_A, TLOC_PP_AS } TLOC_PP
 
 typedef struct {
     char* path;
-    bool include_untracked;
+    bool use_git;
     bool group_by_language;
     bool exclude_unsupported;
     TLOC_PP_Option print_parent;
@@ -18,9 +18,7 @@ void tloc_options_init(TLOC_Options* opts);
 void tloc_options_destory(TLOC_Options* opts);
 void tloc_options_print(TLOC_Options* opts);
 
-static inline void tloc_options_set_include_untracked(TLOC_Options* opts, const void* value) {
-    opts->include_untracked = value;
-}
+static inline void tloc_options_set_use_git(TLOC_Options* opts, const void* value) { opts->use_git = value; }
 static inline void tloc_options_set_group_by_language(TLOC_Options* opts, const void* value) {
     opts->group_by_language = value;
 }

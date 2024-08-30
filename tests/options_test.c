@@ -4,7 +4,7 @@
 #include <string.h>
 
 static char* tloc_options_map_arg_test_arg_params[] = {
-    "-h", "-v", "-sl", "-iu", "--language", "-eu", "-pp", "-pp-s", "-pp-a", "-pp-as", "--not-a-flag", "-naf", NULL};
+    "-h", "-v", "-sl", "-g", "--language", "-eu", "-pp", "-pp-s", "-pp-a", "-pp-as", "--not-a-flag", "-naf", NULL};
 MunitParameterEnum tloc_options_map_arg_test_params[] = {
     {"arg", tloc_options_map_arg_test_arg_params},
     {NULL, NULL},
@@ -21,10 +21,10 @@ MunitResult tloc_options_map_arg_test(const MunitParameter params[], void* data)
         strcmp(arg_flag, "-naf") == 0 || strcmp(arg_flag, "--not-a-flag") == 0) {
         bool found_valid_option = tloc_options_map_arg(&opts, arg_flag, NULL);
         munit_assert_false(found_valid_option);
-    } else if (strcmp(arg_flag, "-iu") == 0) {
+    } else if (strcmp(arg_flag, "-g") == 0) {
         bool found_valid_option = tloc_options_map_arg(&opts, arg_flag, NULL);
         munit_assert_true(found_valid_option);
-        munit_assert_true(opts.include_untracked);
+        munit_assert_true(opts.use_git);
     } else if (strcmp(arg_flag, "--language") == 0) {
         bool found_valid_option = tloc_options_map_arg(&opts, arg_flag, NULL);
         munit_assert_true(found_valid_option);
