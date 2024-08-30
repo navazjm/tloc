@@ -73,20 +73,26 @@ const size_t tloc_args_filtering_sorting_starting_idx = 3;
 /* track where displaying options begin */
 const size_t tloc_args_displaying_starting_idx = 4;
 
-/* linear search of mapping command line arg flags to respective option property */
-void tloc_options_map_arg(TLOC_Options* opts, const char* arg_name, const void* arg_value) {
+/*
+ * Map command line arg flags to respective option property
+ *
+ * @returns true/false if valid option was found
+ * */
+bool tloc_options_map_arg(TLOC_Options* opts, const char* arg_flag, const void* arg_value) {
     for (size_t i = tloc_args_filtering_sorting_starting_idx; i < tloc_args_count; i++) {
         TLOC_Arg arg = tloc_args[i];
 
-        if (strcmp(arg_name, arg.shorthand) == 0 || strcmp(arg_name, arg.longhand) == 0) {
+        if (strcmp(arg_flag, arg.shorthand) == 0 || strcmp(arg_flag, arg.longhand) == 0) {
             if (arg_value) {
                 arg.set_option_func(opts, arg_value);
             } else {
                 arg.set_option_func(opts, (const void*)(intptr_t) true);
             }
-            return;
+            return true;
         }
     }
+
+    return false;
 }
 
 /* Print the usage help options */

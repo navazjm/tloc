@@ -54,21 +54,28 @@ void tloc_app_parse_cmd_args(TLOC_App* app, int argc, char** argv) {
         exit(EXIT_SUCCESS);
     }
 
+    // set file path to second command line arg, if path exists and we have access to it
+    uint8_t args_stating_index = 1;
+    if (access(argv[1], F_OK) == 0) {
+        app->opts.path = strdup(argv[1]);
+        args_stating_index = 2;
+    }
+
     char* options[2] = {NULL, NULL};
-    for (uint8_t i = 1; i < argc; i++) {
+    for (uint8_t i = args_stating_index; i < argc; i++) {
         tloc_utils_split_cmd_arg(argv[i], options);
-        tloc_options_map_arg(&app->opts, options[0], options[1]);
+        bool found_valid_option = tloc_options_map_arg(&app->opts, options[0], options[1]);
 
         free(options[0]);
         if (options[1]) {
             free(options[1]);
         }
         options[0] = options[1] = NULL;
-    }
-
-    // set file path to second command line arg, if path exists and we have access to it
-    if (access(argv[1], F_OK) == 0) {
-        app->opts.path = strdup(argv[1]);
+        if (!found_valid_option) {
+            printf("Error! Invalid command line arg: %s\n", argv[i]);
+            tloc_app_destroy(app);
+            exit(EXIT_FAILURE);
+        }
     }
 }
 

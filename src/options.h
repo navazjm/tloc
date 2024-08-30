@@ -58,7 +58,7 @@ extern const size_t tloc_args_count;
 extern const size_t tloc_args_filtering_sorting_starting_idx;
 extern const size_t tloc_args_displaying_starting_idx;
 
-void tloc_options_map_arg(TLOC_Options* opts, const char* arg_name, const void* arg_value);
+bool tloc_options_map_arg(TLOC_Options* opts, const char* arg_flag, const void* arg_value);
 void tloc_options_args_print_help();
 
 #endif
