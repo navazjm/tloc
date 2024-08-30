@@ -5,16 +5,20 @@
 #include <unistd.h>
 
 /* Initialize base application options with sane defaults */
-void tloc_options_init(TLOC_Options* opts) {
+bool tloc_options_init(TLOC_Options* opts) {
     opts->path = getcwd(NULL, 0);
+    if (opts->path == NULL) {
+        return true;
+    }
     opts->use_git = false;
     opts->group_by_language = false;
     opts->exclude_unsupported = false;
     opts->print_parent = TLOC_PP_NONE;
+    return false;
 }
 
 /* Free allocated memory for options struct */
-void tloc_options_destory(TLOC_Options* opts) {
+void tloc_options_destroy(TLOC_Options* opts) {
     if (opts->path) {
         free(opts->path);
     }

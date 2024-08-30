@@ -12,13 +12,18 @@
 
 void tloc_app_init(TLOC_App* app) {
     app->version = "0.1.0";
-    tloc_options_init(&app->opts);
+    bool err = tloc_options_init(&app->opts);
+    if (err) {
+        printf("Error! Failed to initialize default app options\n");
+        tloc_app_destroy(app);
+        exit(EXIT_FAILURE);
+    }
 }
 
 /* Destroy base application, freeing up memory allocations */
 void tloc_app_destroy(TLOC_App* app) {
     if (app) {
-        tloc_options_destory(&app->opts);
+        tloc_options_destroy(&app->opts);
         tloc_summary_file_summaries_destroy(&app->file_summaries);
     }
 }

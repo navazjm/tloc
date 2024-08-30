@@ -14,8 +14,8 @@ typedef struct {
     TLOC_PP_Option print_parent;
 } TLOC_Options;
 
-void tloc_options_init(TLOC_Options* opts);
-void tloc_options_destory(TLOC_Options* opts);
+bool tloc_options_init(TLOC_Options* opts);
+void tloc_options_destroy(TLOC_Options* opts);
 void tloc_options_print(TLOC_Options* opts);
 
 static inline void tloc_options_set_use_git(TLOC_Options* opts, const void* value) { opts->use_git = value; }
