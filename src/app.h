@@ -9,9 +9,7 @@
 typedef struct {
     const char* version;
     TLOC_Options opts;
-    TLOC_File_Summary* file_summaries;
-    uint16_t file_summaries_buffer_size;
-    uint16_t file_summaries_count;
+    TLOC_File_Summaries file_summaries;
 } TLOC_App;
 
 void tloc_app_init(TLOC_App* app);

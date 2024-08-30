@@ -1,6 +1,7 @@
 #include "app.h"
 #include "language.h"
 #include "options.h"
+#include "summary.h"
 #include "utils.h"
 #include <dirent.h>
 #include <stdio.h>
@@ -12,19 +13,13 @@
 void tloc_app_init(TLOC_App* app) {
     app->version = "0.1.0";
     tloc_options_init(&app->opts);
-
-    app->file_summaries = NULL;
-    app->file_summaries_buffer_size = 32;
-    app->file_summaries_count = 0;
 }
 
 /* Destroy base application, freeing up memory allocations */
 void tloc_app_destroy(TLOC_App* app) {
     if (app) {
         tloc_options_destory(&app->opts);
-        if (app->file_summaries) {
-            free(app->file_summaries);
-        }
+        tloc_summary_file_summaries_destroy(&app->file_summaries);
     }
 }
 
@@ -89,17 +84,17 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
     }
 
     if (S_ISREG(path_stat.st_mode)) { // app->path is a single file
-        app->file_summaries = (TLOC_File_Summary*)malloc(sizeof(TLOC_File_Summary));
-        if (app->file_summaries == NULL) {
-            printf("Error! Failed to allocate memory to track file information\n");
+        bool err = tloc_summary_file_summaries_init(&app->file_summaries, 1);
+        if (err) {
+            printf("Error! Failed to allocated memory for storing file summaries\n");
             tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
         tloc_app_count_lines_of_code_file(app, app->opts.path);
     } else if (S_ISDIR(path_stat.st_mode)) {
-        app->file_summaries = (TLOC_File_Summary*)malloc(app->file_summaries_buffer_size * sizeof(TLOC_File_Summary));
-        if (app->file_summaries == NULL) {
-            printf("Error! Failed to allocate memory to track file information\n");
+        bool err = tloc_summary_file_summaries_init(&app->file_summaries, 32);
+        if (err) {
+            printf("Error! Failed to allocated memory for storing file summaries\n");
             tloc_app_destroy(app);
             exit(EXIT_FAILURE);
         }
@@ -113,18 +108,6 @@ void tloc_app_count_lines_of_code(TLOC_App* app) {
 
 /* Parses a specific file, calculating total lines, blank lines, comment lines, and code lines */
 void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
-    if (app->file_summaries_count == app->file_summaries_buffer_size) {
-        app->file_summaries_buffer_size *= 2;
-        TLOC_File_Summary* temp =
-            realloc(app->file_summaries, app->file_summaries_buffer_size * sizeof(TLOC_File_Summary));
-        if (temp == NULL) {
-            printf("Error! Failed to reallocate memory to track file information\n");
-            tloc_app_destroy(app);
-            exit(EXIT_FAILURE);
-        }
-        app->file_summaries = temp;
-    }
-
     FILE* fp;
     char* line = NULL;
     size_t len = 0;
@@ -178,12 +161,16 @@ void tloc_app_count_lines_of_code_file(TLOC_App* app, const char* file_path) {
         }
         file_summary.code_lines++;
     }
-
-    app->file_summaries[app->file_summaries_count++] = file_summary;
-
     fclose(fp);
     if (line)
         free(line);
+
+    bool err = tloc_summary_file_summaries_append(&app->file_summaries, &file_summary);
+    if (err) {
+        printf("Error! Failed to append file summary to existing file summaries\n");
+        tloc_app_destroy(app);
+        exit(EXIT_FAILURE);
+    }
 }
 
 /* Parses a directory of files */
@@ -272,7 +259,7 @@ void tloc_app_count_lines_of_code_dir_recursion(TLOC_App* app, const char* dir_p
 
 /* Begin the process of displaying file summaries to the user */
 void tloc_app_display_results(TLOC_App* app) {
-    if (app->file_summaries == NULL || app->file_summaries_count == 0) {
+    if (app->file_summaries.items == NULL || app->file_summaries.count == 0) {
         return;
     }
 
@@ -286,7 +273,7 @@ void tloc_app_display_results(TLOC_App* app) {
 
 /* Display file summaries per file */
 void tloc_app_display_results_by_file(TLOC_App* app) {
-    size_t buffer_size = 1024 + app->file_summaries_count * 256;
+    size_t buffer_size = 1024 + app->file_summaries.count * 256;
     char* output = (char*)malloc(buffer_size);
     if (output == NULL) {
         perror("Failed to allocate memory");
@@ -303,8 +290,8 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
     int total_blank = 0, total_comment = 0, total_code = 0, total_lines = 0;
     char* output_line;
 
-    for (int i = 0; i < app->file_summaries_count; i++) {
-        TLOC_File_Summary file_summary = app->file_summaries[i];
+    for (size_t i = 0; i < app->file_summaries.count; i++) {
+        TLOC_File_Summary file_summary = app->file_summaries.items[i];
 
         // cannot use strdup bc we may have prepend file name with '/' when formatting based on TLOC_PP_Option
         char* temp_file_summary_name = (char*)malloc((strlen(file_summary.name) + 2) * sizeof(char));
@@ -337,7 +324,7 @@ void tloc_app_display_results_by_file(TLOC_App* app) {
         output_line = NULL;
     }
 
-    if (app->file_summaries_count > 1) {
+    if (app->file_summaries.count > 1) {
         strcat(output,
                "------------------------------------------------------------------------------------------------\n");
         asprintf(&output_line, "TOTAL: %43d %14d %14d %14d\n", total_blank, total_comment, total_code, total_lines);
@@ -357,8 +344,8 @@ void tloc_app_display_results_by_language(TLOC_App* app) {
     int language_summary_groups_count = 0;
     TLOC_Language_Summary* language_summary_groups = NULL;
 
-    for (int i = 0; i < app->file_summaries_count; i++) {
-        TLOC_File_Summary file_summary = app->file_summaries[i];
+    for (size_t i = 0; i < app->file_summaries.count; i++) {
+        TLOC_File_Summary file_summary = app->file_summaries.items[i];
         const TLOC_Language* supported_language = tloc_language_get_by_extension(file_summary.ext);
         const char* language_name = supported_language ? supported_language->name : "N/A";
         TLOC_Language_Summary* group = tloc_summary_find_or_create_language_summary(
