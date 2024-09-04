@@ -2,9 +2,8 @@
 
 ## Overview
 
-By default, when `tloc` is ran without any command-line arguments, it uses the 
-current working directory (`cwd`) as the file path to parse. It will only parse 
-files returned by `git ls-files <path>`, and it renders data for each file individually. 
+By default, when `tloc` is ran without any command-line arguments, `tloc` will use 
+your current working directory (`cwd`), rendering data for each file individually. 
 Using the options listed below, you can customize how `tloc` renders the data to 
 suit your preferences.
 
@@ -196,6 +195,46 @@ is not known, will also not be displayed.
 <details>
 <summary>View Usage</summary>
 <pre>
+$ tloc -g -pp
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+/.clang-format                                   0              0              0              5
+/.gitignore                                      0              0              0             60
+/.gitmodules                                     0              0              0              3
+/CMakeLists.txt                                  0              0              0             36
+/COPYING                                         0              0              0            621
+/README.md                                      64              0            213            277
+/docs/calculations.md                           36              0            102            138
+/docs/code-of-conduct.md                        18              0             56             74
+/docs/contributing.md                            9              0             18             27
+/docs/options.md                                51              0            207            258
+/scripts/debug.sh                                0              0              0             16
+/scripts/install.sh                              0              0              0              5
+/scripts/run.sh                                  0              0              0             16
+/scripts/test.sh                                 0              0              0             16
+/src/app.c                                      52             20            340            412
+/src/app.h                                       4              0             23             27
+/src/language.c                                 10             20             51             81
+/src/language.h                                  4              0             13             17
+/src/options.c                                  13             16            113            142
+/src/options.h                                  10              0             52             62
+/src/summary.c                                   6              3             47             56
+/src/summary.h                                   7              0             31             38
+/src/tloc.c                                      2              0             11             13
+/src/utils.c                                    22             59            121            202
+/src/utils.h                                     3              0             10             13
+/tests/language_test.c                           4              0             29             33
+/tests/language_test.h                           3              0              7             10
+/tests/options_test.c                            6              2             53             61
+/tests/options_test.h                            3              0              7             10
+/tests/tloc_test.c                               2              0             12             14
+/tests/utils_test.c                             25              0            146            171
+/tests/utils_test.h                              3              0             12             15
+/vendors/munit                                   0              0              0              0
+------------------------------------------------------------------------------------------------
+TOTAL:                                         357            120           1674           2929
+------------------------------------------------------------------------------------------------
 </pre>
 </details>
 
@@ -210,6 +249,46 @@ is not known, will also not be displayed.
 <details>
 <summary>View Usage</summary>
 <pre>
+$ tloc -g -pp-s
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+/.clang-format                                   0              0              0              5
+/.gitignore                                      0              0              0             60
+/.gitmodules                                     0              0              0              3
+/CMakeLists.txt                                  0              0              0             36
+/COPYING                                         0              0              0            621
+/README.md                                      64              0            213            277
+/d/calculations.md                              36              0            102            138
+/d/code-of-conduct.md                           18              0             56             74
+/d/contributing.md                               9              0             18             27
+/d/options.md                                   51              0            247            298
+/s/debug.sh                                      0              0              0             16
+/s/install.sh                                    0              0              0              5
+/s/run.sh                                        0              0              0             16
+/s/test.sh                                       0              0              0             16
+/s/app.c                                        52             20            340            412
+/s/app.h                                         4              0             23             27
+/s/language.c                                   10             20             51             81
+/s/language.h                                    4              0             13             17
+/s/options.c                                    13             16            113            142
+/s/options.h                                    10              0             52             62
+/s/summary.c                                     6              3             47             56
+/s/summary.h                                     7              0             31             38
+/s/tloc.c                                        2              0             11             13
+/s/utils.c                                      22             59            121            202
+/s/utils.h                                       3              0             10             13
+/t/language_test.c                               4              0             29             33
+/t/language_test.h                               3              0              7             10
+/t/options_test.c                                6              2             53             61
+/t/options_test.h                                3              0              7             10
+/t/tloc_test.c                                   2              0             12             14
+/t/utils_test.c                                 25              0            146            171
+/t/utils_test.h                                  3              0             12             15
+/v/munit                                         0              0              0              0
+------------------------------------------------------------------------------------------------
+TOTAL:                                         357            120           1714           2969
+------------------------------------------------------------------------------------------------
 </pre>
 </details>
 
@@ -224,6 +303,46 @@ is not known, will also not be displayed.
 <details>
 <summary>View Usage</summary>
 <pre>
+$ tloc -g -pp-a
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+/.clang-format                                   0              0              0              5
+/.gitignore                                      0              0              0             60
+/.gitmodules                                     0              0              0              3
+/CMakeLists.txt                                  0              0              0             36
+/COPYING                                         0              0              0            621
+/README.md                                      64              0            213            277
+/docs/calculations.md                           36              0            102            138
+/docs/code-of-conduct.md                        18              0             56             74
+/docs/contributing.md                            9              0             18             27
+/docs/options.md                                51              0            247            298
+/scripts/debug.sh                                0              0              0             16
+/scripts/install.sh                              0              0              0              5
+/scripts/run.sh                                  0              0              0             16
+/scripts/test.sh                                 0              0              0             16
+/src/app.c                                      52             20            340            412
+/src/app.h                                       4              0             23             27
+/src/language.c                                 10             20             51             81
+/src/language.h                                  4              0             13             17
+/src/options.c                                  13             16            113            142
+/src/options.h                                  10              0             52             62
+/src/summary.c                                   6              3             47             56
+/src/summary.h                                   7              0             31             38
+/src/tloc.c                                      2              0             11             13
+/src/utils.c                                    22             59            121            202
+/src/utils.h                                     3              0             10             13
+/tests/language_test.c                           4              0             29             33
+/tests/language_test.h                           3              0              7             10
+/tests/options_test.c                            6              2             53             61
+/tests/options_test.h                            3              0              7             10
+/tests/tloc_test.c                               2              0             12             14
+/tests/utils_test.c                             25              0            146            171
+/tests/utils_test.h                              3              0             12             15
+/vendors/munit                                   0              0              0              0
+------------------------------------------------------------------------------------------------
+TOTAL:                                         357            120           1714           2969
+------------------------------------------------------------------------------------------------
 </pre>
 </details>
 
@@ -238,6 +357,46 @@ is not known, will also not be displayed.
 <details>
 <summary>View Usage</summary>
 <pre>
+$ tloc -g -pp-as
+------------------------------------------------------------------------------------------------
+File name                                    blank        comment           code          total
+------------------------------------------------------------------------------------------------
+/.clang-format                                   0              0              0              5
+/.gitignore                                      0              0              0             60
+/.gitmodules                                     0              0              0              3
+/CMakeLists.txt                                  0              0              0             36
+/COPYING                                         0              0              0            621
+/README.md                                      64              0            213            277
+/d/calculations.md                              36              0            102            138
+/d/code-of-conduct.md                           18              0             56             74
+/d/contributing.md                               9              0             18             27
+/d/options.md                                   51              0            247            298
+/s/debug.sh                                      0              0              0             16
+/s/install.sh                                    0              0              0              5
+/s/run.sh                                        0              0              0             16
+/s/test.sh                                       0              0              0             16
+/s/app.c                                        52             20            340            412
+/s/app.h                                         4              0             23             27
+/s/language.c                                   10             20             51             81
+/s/language.h                                    4              0             13             17
+/s/options.c                                    13             16            113            142
+/s/options.h                                    10              0             52             62
+/s/summary.c                                     6              3             47             56
+/s/summary.h                                     7              0             31             38
+/s/tloc.c                                        2              0             11             13
+/s/utils.c                                      22             59            121            202
+/s/utils.h                                       3              0             10             13
+/t/language_test.c                               4              0             29             33
+/t/language_test.h                               3              0              7             10
+/t/options_test.c                                6              2             53             61
+/t/options_test.h                                3              0              7             10
+/t/tloc_test.c                                   2              0             12             14
+/t/utils_test.c                                 25              0            146            171
+/t/utils_test.h                                  3              0             12             15
+/v/munit                                         0              0              0              0
+------------------------------------------------------------------------------------------------
+TOTAL:                                         357            120           1714           2969
+------------------------------------------------------------------------------------------------
 </pre>
 </details>
 
