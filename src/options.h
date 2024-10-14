@@ -4,50 +4,75 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef enum { TLOC_PP_NONE, TLOC_PP, TLOC_PP_S, TLOC_PP_A, TLOC_PP_AS } TLOC_PP_Option;
+typedef enum
+{
+    TLOC_PP_NONE,
+    TLOC_PP,
+    TLOC_PP_S,
+    TLOC_PP_A,
+    TLOC_PP_AS
+} TLOC_PP_Option;
 
-typedef struct {
-    char* path;
+typedef struct
+{
+    char *path;
     bool use_git;
     bool group_by_language;
     bool exclude_unsupported;
     TLOC_PP_Option print_parent;
 } TLOC_Options;
 
-bool tloc_options_init(TLOC_Options* opts);
-void tloc_options_destroy(TLOC_Options* opts);
-void tloc_options_print(TLOC_Options* opts);
+bool tloc_options_init(TLOC_Options *opts);
+void tloc_options_destroy(TLOC_Options *opts);
+void tloc_options_print(TLOC_Options *opts);
 
-static inline void tloc_options_set_use_git(TLOC_Options* opts, const void* value) { opts->use_git = value; }
-static inline void tloc_options_set_group_by_language(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_use_git(TLOC_Options *opts, const void *value)
+{
+    opts->use_git = value;
+}
+static inline void
+tloc_options_set_group_by_language(TLOC_Options *opts, const void *value)
+{
     opts->group_by_language = value;
 }
-static inline void tloc_options_set_exclude_unsupported(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_exclude_unsupported(TLOC_Options *opts, const void *value)
+{
     opts->exclude_unsupported = value;
 }
-static inline void tloc_options_set_print_parent(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_print_parent(TLOC_Options *opts, const void *value)
+{
     (void)value;
     opts->print_parent = TLOC_PP;
 }
-static inline void tloc_options_set_print_parent_short(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_print_parent_short(TLOC_Options *opts, const void *value)
+{
     (void)value;
     opts->print_parent = TLOC_PP_S;
 }
-static inline void tloc_options_set_print_parent_all(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_print_parent_all(TLOC_Options *opts, const void *value)
+{
     (void)value;
     opts->print_parent = TLOC_PP_A;
 }
-static inline void tloc_options_set_print_parent_all_short(TLOC_Options* opts, const void* value) {
+static inline void
+tloc_options_set_print_parent_all_short(TLOC_Options *opts, const void *value)
+{
     (void)value;
     opts->print_parent = TLOC_PP_AS;
 }
 
-typedef void (*TLOC_Set_Option_Func)(TLOC_Options*, const void*);
+typedef void (*TLOC_Set_Option_Func)(TLOC_Options *, const void *);
 
-typedef struct {
-    const char* shorthand;
-    const char* longhand;
-    const char* description;
+typedef struct
+{
+    const char *shorthand;
+    const char *longhand;
+    const char *description;
     TLOC_Set_Option_Func set_option_func;
 } TLOC_Arg;
 
@@ -56,7 +81,7 @@ extern const size_t tloc_args_count;
 extern const size_t tloc_args_filtering_sorting_starting_idx;
 extern const size_t tloc_args_displaying_starting_idx;
 
-bool tloc_options_map_arg(TLOC_Options* opts, const char* arg_flag, const void* arg_value);
+bool tloc_options_map_arg(TLOC_Options *opts, const char *arg_flag, const void *arg_value);
 void tloc_options_args_print_help();
 
 #endif
